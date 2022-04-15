@@ -10,16 +10,31 @@ Written in Python, using Curses as a main library, but because I'm a little wind
 
 So, what does that really look like?
 
-### The Big Three
+### The Big Four
 
 On the right of the screen, a log and psuedo-topbar-thing with constantly relevant or changing information, on the left, the Gameboard. Appearing only when needed, a contextual Menu that layers and displays relevent information. I call these the big three. I bring the concept from Dwarf Fortress and CDDA, although I'm sure many other games have used it.
-
+Underneath them, python runs the Engine that makes everything click.
 It seems like a simple concept to back this game with.
+
+#### Log
+The log will be split into three parts, the first displays major information, such as TIME. The second displays a rolling log of your moves and all opponent's. The third displays information about what is under your cursor.
+
+#### Gameboard
+The Gameboard needs a few things;
+- Layers; i dont want to be able to go underground, but a background for LAND, a foreground for ASSET, MILITARY
+- Cursor;
+
+#### Menu
+The menu, I think, will be the most dependent of the big three. In its simplest, all it needs to do is 
+
+#### Engine
+Build with Curses, run under everything. Handle input via menu, impact gameboard and log.
 
 ### Content
 Ideally, everything is somewhat connected; I like CDDA for that.
 
 PLAYER controls FACTION, DECISCION
+	DECISCION controls RESEARCH, CONSTRUCTION, IDEOLOGY, ORDER
 	FACTION controls LAND, RESOURCE, TECH, IDEOLOGY, CITIZEN, MILITARY, ASSET
 		LAND
 			changable through CONSTRUCTION
@@ -31,7 +46,8 @@ PLAYER controls FACTION, DECISCION
 				PREINDUSTRIAL
 				INDUSTRIAL
 				POSTINDUSTRIAL
-				POSTMODERN
+				MODERN / PRESPACER
+				POSTSPACER / SCIFI
 				FANTASTIC
 			changable through RESEARCH
 		IDEOLOGY
@@ -45,7 +61,7 @@ PLAYER controls FACTION, DECISCION
 			has FEAROFLEADERSHIP, FEAROFOTHERS, JOY, PAIN
 			impacted by IDEOLOGY
 		MILITARY
-			controlled by DECISCION
+			controlled by ORDER
 			requires RESOURCE, ASSET, TECH
 				EQUIPMENT
 				BODIES
@@ -59,6 +75,6 @@ PLAYER controls FACTION, DECISCION
 				PRODUCTION takes TIME
 				CONSTRUCTION takes TIME
 				RESEARCH takes TIME
-				* takes time
+				* takes TIME
 			impacted by IDEOLOGY
 			
