@@ -1,2 +1,3 @@
 # CODENAME-WARS
-A Warfare ASCII Replication Simulator, aka WARS, is designed to be a easy to modify political/warfare/country simulation game.
+Warfare ASCII Replication Simulator, aka WARS, is a political/warfare/country simulation game. I'll try to build it to be silky smooth to mod, but no promises.
+Written in Python, using Curses as a main library.
