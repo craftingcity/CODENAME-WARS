@@ -45,6 +45,7 @@ PLAYER controls FACTION, DECISCION
 			has FEAROFLEADERSHIP, FEAROFOTHERS, JOY, PAIN
 			impacted by IDEOLOGY
 		MILITARY
+			controlled by DECISCION
 			requires RESOURCE, ASSET, TECH
 				EQUIPMENT
 				BODIES
@@ -58,5 +59,6 @@ PLAYER controls FACTION, DECISCION
 				PRODUCTION takes TIME
 				CONSTRUCTION takes TIME
 				RESEARCH takes TIME
+				* takes time
 			impacted by IDEOLOGY
 			
