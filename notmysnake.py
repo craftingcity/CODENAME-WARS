@@ -88,6 +88,7 @@ with term.cbreak(), term.hidden_cursor():
     
     heading = world[head[0]][head[1]]
     ate_food = False
+    #### THIS LOOKS LIKE A TASTY START FOR RANDOM WORLDS AND THE LIKE
     if heading == APPLE:
       ate_food = True
       empty_spaces = list_empty_spaces(world, SPACE)
