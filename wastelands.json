@@ -1,0 +1,61 @@
+{
+    "modid": "wastelands",
+    "moddata": [
+        {
+            "id": "wasteland_plains",
+            "catagory": "TERRAIN",
+            "name": "Wasteland",
+            "description": "This place is barren of all but dust.",
+            "representation": "W",
+        },
+        {
+            "id": "irradiated_water",
+            "catagory": "TERRAIN",
+            "name": "Irradiated Water",
+            "description": "A pool of irradiated water. No good to drink - even when boiled.",
+            "representation":"~"
+        },
+        {
+            "id": "metal_junk"
+        },
+        {
+            "id": "raider",
+            "catagory": "MILITARY",
+            "name": "Raider Band",
+            "subcatagory": "unit",
+            "description": "A group of organized assholes with weapons. They measure you by what they can take from your corpse.",
+            "representation":"R"
+        },
+        {
+            "id": "militia",
+            "catagory": "MILITARY",
+            "subcatagory": "unit",
+            "name": "Militia",
+            "description": "A group of organized assholes with weapons. They'd rather be farming, but they're willing to lay down their life in service to their faction.",
+            "representation":"M"
+        },
+        {
+            "id": "basic_housing",
+            "catagory": "ASSET",
+            "subcatagory": "building",
+            "name": "Basic Housing",
+            "description": "A building capable of housing only a few people in poor conditions.",
+            "representation":"H"
+        },
+        {
+            "id": "advanced_housing",
+            "catagory": "ASSET",
+            "subcatagory": "building",
+            "name": "Advanced Housing",
+            "description": "A building capable of housing many people in comfortable conditions.",
+            "representation":"H"
+        },
+        {
+            "id": "advanced_housing_tech",
+            "catagory": "TECH",
+            "subcatagory": "building_upgrades",
+            "name": "Advanced Housing",
+            "description": "A unit of housing capable of housing only a few people in poor conditions.",
+        },
+]
+}
