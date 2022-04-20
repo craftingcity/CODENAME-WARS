@@ -6,7 +6,7 @@
             "catagory": "TERRAIN",
             "name": "Wasteland",
             "description": "This place is barren of all but dust.",
-            "representation": "W",
+            "representation": "W"
         },
         {
             "id": "irradiated_water",
@@ -16,7 +16,44 @@
             "representation":"~"
         },
         {
-            "id": "metal_junk"
+            "id": "metal_junk",
+            "catagory": "RESOURCE",
+            "subcatagory": "metal",
+            "name": "Metal Junk",
+            "description": "A pile of metal junk. Not very useful in its current form.",
+            "representation": "*"
+        },
+        {
+            "id": "advanced_housing_tech",
+            "catagory": "TECH",
+            "subcatagory": "building_upgrades",
+            "name": "Advanced Housing",
+            "description": "Using better materials and planning, one can increase both the comfort and available space in housing assets.",
+            "cost_to_research": 2000
+        },
+        {
+            "id": "metal_processing_tech",
+            "catagory": "TECH",
+            "subcatagory": "production",
+            "name": "Metal Processing",
+            "description": "Using heat, one can refine ore or scrap into useable metal.",
+            "cost_to_research": 1200
+        },
+        {
+            "id": "harsh_survivalism",
+            "catagory": "IDEOLOGY",
+            "subcatagory": "survivor_ideology",
+            "name": "Harsh Survivalism",
+            "description": "A way of thinking that assures the survival of the few at the cost of the many.",
+            "tennents": []
+        },
+        {
+            "id": "egalatarian_survivalism",
+            "catagory": "IDEOLOGY",
+            "subcatagory": "survivor_ideology",
+            "name": "Kind Survivalism",
+            "description": "A way of thinking that assures the survival of the many at the cost of the few.",
+            "tennents": []
         },
         {
             "id": "raider",
@@ -24,7 +61,17 @@
             "name": "Raider Band",
             "subcatagory": "unit",
             "description": "A group of organized assholes with weapons. They measure you by what they can take from your corpse.",
-            "representation":"R"
+            "representation":"R",
+            "military_information": [{
+                "attack": 2,
+                "defense": 2,
+                "speed": 5,
+                "strategy": "brutal_strategy",
+                "preperation_speed": 2,
+                "starting_morale": 3,
+                "max_morale": 7,
+                "bodies": 30
+            }]
         },
         {
             "id": "militia",
@@ -32,30 +79,44 @@
             "subcatagory": "unit",
             "name": "Militia",
             "description": "A group of organized assholes with weapons. They'd rather be farming, but they're willing to lay down their life in service to their faction.",
-            "representation":"M"
+            "representation":"M",
+            "military_information": [{
+                "attack": 2,
+                "defense": 3,
+                "speed": 5,
+                "strategy": "basic_strategy",
+                "preperation_speed": 3,
+                "starting_morale": 5,
+                "max_morale": 7,
+                "bodies": 35
+            }]
+        },
+        {
+            "id": "metal_forge",
+            "catagory": "ASSET",
+            "subcatagory": "production",
+            "name": "Metal Forge",
+            "description": "A metal processing plant. Turns raw metals into usable things.",
+            "representation":"F",
+            "production": [],
+            "required_tech": "metal_processing_tech"
         },
         {
             "id": "basic_housing",
             "catagory": "ASSET",
-            "subcatagory": "building",
+            "subcatagory": "housing",
             "name": "Basic Housing",
             "description": "A building capable of housing only a few people in poor conditions.",
-            "representation":"H"
+            "representation":"h"
         },
         {
             "id": "advanced_housing",
             "catagory": "ASSET",
-            "subcatagory": "building",
+            "subcatagory": "housing",
             "name": "Advanced Housing",
             "description": "A building capable of housing many people in comfortable conditions.",
-            "representation":"H"
-        },
-        {
-            "id": "advanced_housing_tech",
-            "catagory": "TECH",
-            "subcatagory": "building_upgrades",
-            "name": "Advanced Housing",
-            "description": "A unit of housing capable of housing only a few people in poor conditions.",
-        },
+            "representation":"H",
+            "required_tech": "advanced_building_tech"
+        }
 ]
 }
