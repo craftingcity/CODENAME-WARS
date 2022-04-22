@@ -7,21 +7,16 @@ from curses import wrapper
 def main(stdscr):
     stdscr = curses.initscr()
     c = ""
-    count = 0
-    down_count = 0
-    while c not in ["q", "Q"]:
-        stdscr.addstr(down_count, count, str(c))
-        c = stdscr.getkey()
-        count += 1
-        if count > 10:
-            count = 0
-            down_count += 1
-            if down_count > 10:
-                count = 0
-                down_count = 0
-                stdscr.clear()
-                stdscr.addstr(8, 20, "Completed. Press any q or Q to quit.")
-                stdscr.addstr(10, 20, "Any other keypress will continue.")
+    dimentional_tuple = stdscr.getmaxyx()
+    height_dimention = dimentional_tuple[0]
+    width_dimention = dimentional_tuple[1]
+
+## currently not working
+    map_window = stdscr.subwin(height_dimention // 2, width_dimention // 2, 0, 0)
+    map_window.addstr(20, 20, "this is in my subwindow")
+
+
+    c = stdscr.getch()
 
 
 
