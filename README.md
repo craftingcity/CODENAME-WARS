@@ -1,6 +1,6 @@
 # CODENAME-WARS
 Warfare ASCII Replication Simulator, aka WARS, is a political/warfare/country simulation game. I'll try to build it to be silky smooth to mod, but no promises.
-Written in Python, using Blessed (https://pypi.org/project/blessed/) as a main library.
+Written in Python, using Curses (https://docs.python.org/3/library/curses.html) as a main library.
 
 ## Todo
 
@@ -33,7 +33,7 @@ Build with Curses, run under everything. Handle input via menu, impact gameboard
 Ideally, everything is somewhat connected; I like CDDA for that.
 
 PLAYER controls FACTION, DECISCION
-	DECISCION controls RESEARCH, CONSTRUCTION, IDEOLOGY, ORDER
+	DECISCION controls RESEARCH, CONSTRUCTION, IDEOLOGY, COMMAND
 	FACTION controls LAND, RESOURCE, TECH, IDEOLOGY, CITIZEN, MILITARY, ASSET
 		LAND
 			changable through CONSTRUCTION
@@ -51,23 +51,24 @@ PLAYER controls FACTION, DECISCION
 			changable through RESEARCH
 		IDEOLOGY
 			used by CITIZEN, MILITARY, ASSET
+			impacts MORALE
 			changable through DECISCION, TIME
 		CITIZEN
 			requires RESOURCE, ASSET
 				FOOD
 				WATER
 				HOUSING
-			has FEAROFLEADERSHIP, FEAROFOTHERS, JOY, PAIN
+			has MORALE
 			impacted by IDEOLOGY
 		MILITARY
-			controlled by ORDER
+			controlled by COMMAND
 			requires RESOURCE, ASSET, TECH
 				EQUIPMENT
 				BODIES
 				HOMEBASE
 				*
-			has SPEED, ATTACK, DEFENSE, STRATEGEY, PREPERATIONVSOPPOSED
-			impacted by IDEOLOGY
+			has SPEED, ATTACK, DEFENSE, STRATEGEY, PREPERATIONVSOPPOSED, MORALE
+			impacted by IDEOLOGY, CITIZEN
 		ASSET
 			requires RESOURCE, TECH, LAND
 			has PRODUCTION, HOMEBASE, CONSTRUCTION, RESEARCH, *
