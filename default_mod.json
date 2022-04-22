@@ -1,6 +1,6 @@
 {
     "modid" : "default",
-    "version": 0,
+    "version": 0.1,
     "author": "jitterbeans",
     "content": {
         "decision": 
@@ -59,12 +59,126 @@
                 ]
             }
         ],
-        "terrain": [{}],
-        "resource": [{}],
-        "tech": [{}],
-        "ideology": [{}],
-        "citizen": [{}],
-        "military": [{}],
-        "asset": [{}]
+        "terrain": 
+        [
+            {
+                "id": "testing_terrain",
+                "catagory": "terrain",
+                "subcatagory": "testing",
+                "name": "Blank Terrain",
+                "description": "This peice of terrain is blank, this should only be generated under testing circumstances.",
+                "resources_list": [],
+                "assets_list": ["testing_housing"],
+                "move_speed_multiplier": 1
+            },
+            {
+                "id": "testing_resource_fields",
+                "catagory": "terrain",
+                "subcatagory": "testing",
+                "name": "Resource Terrain",
+                "description": "This peice of terrain is not blank, and yet this should only be generated under testing circumstances.",
+                "resources_list": ["testing_resource"],
+                "assets_list": ["testing_production_building"],
+                "move_speed_multiplier": 0.5
+            }
+        ],
+        "resource": 
+        [
+            {
+                "id": "testing_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Testing Resource",
+                "description": "This resource is for testing purposes only."
+            },
+            {
+                "id": "bodies_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Bodies",
+                "description": "Bodies are a numerical representation of your citizenry who are ready and willing to become military units."
+            },
+            {
+                "id": "political_power_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Political Power",
+                "description": "Political Power is a numerical representation of your influence within your faction."
+            }
+        ],
+        "tech": 
+        [
+            {
+                "id": "testing_technology_resource_production",
+                "catagory": "technology",
+                "subcatagory": "testing",
+                "name": "Resource Production Technology",
+                "description": "This is a testing tech that will allow you to build the required asset for 'testing_resource' extraction.",
+                "cost": 100
+            }
+        ],
+        "ideology": 
+        [
+            {
+
+            }
+        ],
+        "citizen": 
+        [
+            {
+
+            }
+        ],
+        "military": 
+        [
+            {
+                "id": "testing_military",
+                "catagory": "military",
+                "subcatagory": "unit",
+                "name": "Testing Unit",
+                "description": "This is a testing military unit.",
+                "training_cost": 10,
+                "bodies_cost": 10,
+                "equipment_cost": [],
+                "attack": 10,
+                "defense": 5,
+                "mov_speed": 2,
+                "preperation": 5,
+                "strategy": 
+                {
+                    "id": "strat_military_prowess",
+                    "catagory": "military",
+                    "subcatagory": "strategy",
+                    "increase_prep_vs": [],
+                    "decrease_prep_vs": []
+
+                }
+            }
+        ],
+        "asset": 
+        [
+            {
+                "id": "testing_production_building",
+                "catagory": "asset",
+                "subcatagory": "production",
+                "name": "Testing Production Building",
+                "description": "A testing building that produces a testing resource.",
+                "cost": [],
+                "required": ["testing_technology_resource_production"],
+                "production": ["testing_resource"],
+                "prod_speed": 1
+            },
+            {
+                "id": "testing_housing",
+                "catagory": "asset",
+                "subcatagory": "housing",
+                "name": "Testing Housing",
+                "description": "A testing housing.",
+                "cost": [],
+                "required": [],
+                "production": ["bodies_resource"],
+                "prod_speed": 1
+            },
+        ]
         }
 }
