@@ -1,0 +1,70 @@
+{
+    "modid" : "default",
+    "version": 0,
+    "author": "jitterbeans",
+    "content": {
+        "decision": 
+        [
+            {
+                "id": "testing_decision_bodies_pp",
+                "catagory": "decision",
+                "subcatagory": "testing",
+                "name": "Testing Decision: Bodies and PP",
+                "description":"This will apply a +10% bonus to Bodies and Political Power gained for 120 ticks.",
+                "cost": 10,
+                "consequences": 
+            [
+                {
+                    "id": "bodies_buff",
+                    "catagory": "effect",
+                    "subcatagory": "buff",
+                    "name": "Buff: Bodies",
+                    "description":"+10% to Bodies gained from all sources.",
+                    "duration": 120,
+                    "target": "bodies_gained_per_tick",
+                    "effect": 1.1
+                },
+                {
+                    "id": "political_power_buff",
+                    "catagory": "effect",
+                    "subcatagory": "buff",
+                    "name": "Buff: Political Power",
+                    "description":"+10% to Political Power gained from all sources.",
+                    "duration": 120,
+                    "target": "political_power_gained_per_tick",
+                    "effect": 1.1
+                }
+            ]
+        },
+            {
+                "id": "testing_decision_ideology",
+                "catagory": "decision",
+                "subcatagory": "testing",
+                "name": "Testing Decision: Impose Ideology",
+                "description":"This will impose a popularity boost to the 'Testing' ideology.",
+                "cost": 10,
+                "concequences": 
+                [
+                    {
+                        "id": "self_impose_ideology_testing",
+                        "catagory": "effect",
+                        "subcatagory": "ideology",
+                        "name": "Impose: Testing",
+                        "description": "+.01 testing ideology popularity per tick.",
+                        "duration": 120,
+                        "target": ["popularity","testing_ideology"],
+                        "effect": 0.01
+
+                    }
+                ]
+            }
+        ],
+        "terrain": [{}],
+        "resource": [{}],
+        "tech": [{}],
+        "ideology": [{}],
+        "citizen": [{}],
+        "military": [{}],
+        "asset": [{}]
+        }
+}

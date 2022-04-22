@@ -1,8 +1,7 @@
-## testingOne.py is my testing playground.
-## author: craftingcity     date: 04/19/22
-
 import curses
-from curses import wrapper
+import json
+
+
 
 def main(stdscr):
     stdscr = curses.initscr()
@@ -19,6 +18,3 @@ def main(stdscr):
     c = stdscr.getch()
 
 
-
-
-wrapper(main)
