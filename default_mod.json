@@ -13,51 +13,67 @@
                 "description":"This will apply a +10% bonus to Bodies and Political Power gained for 120 ticks.",
                 "cost": 10,
                 "consequences": 
-            [
-                {
-                    "id": "bodies_buff",
-                    "catagory": "effect",
-                    "subcatagory": "buff",
-                    "name": "Buff: Bodies",
-                    "description":"+10% to Bodies gained from all sources.",
-                    "duration": 120,
-                    "target": "bodies_gained_per_tick",
-                    "effect": 1.1
-                },
-                {
-                    "id": "political_power_buff",
-                    "catagory": "effect",
-                    "subcatagory": "buff",
-                    "name": "Buff: Political Power",
-                    "description":"+10% to Political Power gained from all sources.",
-                    "duration": 120,
-                    "target": "political_power_gained_per_tick",
-                    "effect": 1.1
-                }
-            ]
-        },
+                [
+                    {
+                        "id": "bodies_buff",
+                        "catagory": "effect",
+                        "subcatagory": "buff",
+                        "name": "Buff: Bodies",
+                        "description":"+10% to Bodies gained from all sources.",
+                        "duration": 120,
+                        "target": ["bodies_gained_to_be_modified"],
+                        "effect": 1.1
+                    },
+                    {
+                        "id": "political_power_buff",
+                        "catagory": "effect",
+                        "subcatagory": "buff",
+                        "name": "Buff: Political Power",
+                        "description":"+10% to Political Power gained from all sources.",
+                        "duration": 120,
+                        "target": ["political_power_gained_per_tick"],
+                        "effect": 1.1
+                    }
+                ]
+            },
             {
-                "id": "testing_decision_ideology",
+                "id": "testing_decision_impose_auth",
                 "catagory": "decision",
-                "subcatagory": "testing",
+                "subcatagory": "ideology",
                 "name": "Testing Decision: Impose Ideology",
-                "description":"This will impose a popularity boost to the 'Testing' ideology.",
+                "description":"This will impose authoritarianism.",
                 "cost": 10,
                 "concequences": 
                 [
                     {
-                        "id": "self_impose_ideology_testing",
+                        "id": "auth_impose_ideology_testing",
                         "catagory": "effect",
                         "subcatagory": "ideology",
-                        "name": "Impose: Testing",
-                        "description": "+.01 testing ideology popularity per tick.",
-                        "duration": 120,
-                        "target": ["popularity","testing_ideology"],
-                        "effect": 0.01
+                        "target": ["bool_auth_v_anar"],
+                        "effect": 0
 
                     }
                 ]
-            }
+            },
+            {
+                "id": "testing_decision_impose_anar",
+                "catagory": "decision",
+                "subcatagory": "ideology",
+                "name": "Testing Decision: Impose Ideology",
+                "description":"This will impose anarachy.",
+                "cost": 10,
+                "concequences": 
+                [
+                    {
+                        "id": "anar_impose_ideology_testing",
+                        "catagory": "effect",
+                        "subcatagory": "ideology",
+                        "target": ["bool_auth_v_anar"],
+                        "effect": 1
+
+                    }
+                ]
+            },
         ],
         "terrain": 
         [
@@ -104,6 +120,13 @@
                 "subcatagory": "testing",
                 "name": "Political Power",
                 "description": "Political Power is a numerical representation of your influence within your faction."
+            },
+            {
+                "id": "science_points_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Science Points",
+                "description": "Science Points is a numerical representation of your scientific progression."
             }
         ],
         "tech": 
@@ -120,13 +143,55 @@
         "ideology": 
         [
             {
+                "id": "testing_ideology_scale_auth_v_anar",
+                "catagory": "ideology",
+                "subcatagory": "scale",
+                "ideology_matrix": 
+                    {
+                        "0": "Authoritarian",
+                        "1": "Anarcho"
+                    }
 
+            },
+            {
+                "id": "testing_ideology_scale_comm_v_capi",
+                "catagory": "ideology",
+                "subcatagory": "scale",
+                "ideology_matrix": 
+                    {
+                        "0": "Communist",
+                        "1": "Campitalist"
+                    }
             }
         ],
         "citizen": 
         [
             {
-
+                "id": "testing_citizen_anarchocapitalist",
+                "catagory": "citizen",
+                "subcatagory": "testing",
+                "ideal_matrix": {
+                    "testing_ideology_scale_auth_v_anar": 1,
+                    "testing_ideology_scale_comm_v_capi": 1
+                }
+            },
+            {
+                "id": "testing_citizen_authoritariancommunist",
+                "catagory": "citizen",
+                "subcatagory": "testing",
+                "ideal_matrix": {
+                    "testing_ideology_scale_auth_v_anar": 0,
+                    "testing_ideology_scale_comm_v_capi": 0
+                }
+            },
+            {
+                "id": "testing_citizen_centrist",
+                "catagory": "citizen",
+                "subcatagory": "testing",
+                "ideal_matrix": {
+                    "testing_ideology_scale_auth_v_anar": 0.5,
+                    "testing_ideology_scale_comm_v_capi": 0.5
+                }
             }
         ],
         "military": 
@@ -142,7 +207,7 @@
                 "equipment_cost": [],
                 "attack": 10,
                 "defense": 5,
-                "mov_speed": 2,
+                "move_speed": 2,
                 "preperation": 5,
                 "strategy": 
                 {
@@ -165,7 +230,7 @@
                 "description": "A testing building that produces a testing resource.",
                 "cost": [],
                 "required": ["testing_technology_resource_production"],
-                "production": ["testing_resource"],
+                "production": ["testing_resource", 1],
                 "prod_speed": 1
             },
             {
@@ -176,9 +241,9 @@
                 "description": "A testing housing.",
                 "cost": [],
                 "required": [],
-                "production": ["bodies_resource"],
-                "prod_speed": 1
-            },
+                "production": ["bodies_resource", 16],
+                "prod_speed": 0
+            }
         ]
         }
 }
