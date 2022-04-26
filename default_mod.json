@@ -1,6 +1,6 @@
 {
     "modid" : "default",
-    "version": 0.11,
+    "version": 0.13,
     "author": "jitterbeans",
     "content": {
         "decision": 
@@ -73,7 +73,7 @@
 
                     }
                 ]
-            },
+            }
         ],
         "terrain": 
         [
@@ -234,7 +234,7 @@
                 "prod_speed": 1
             },
             {
-                "id": "testing_housing",
+                "id": "testing_instant_housing",
                 "catagory": "asset",
                 "subcatagory": "housing",
                 "name": "Testing Housing",
@@ -243,6 +243,17 @@
                 "required": [],
                 "production": ["bodies_resource", 16],
                 "prod_speed": 0
+            },
+            {
+                "id": "testing_passive_housing",
+                "catagory": "asset",
+                "subcatagory": "housing",
+                "name": "Testing Housing",
+                "description": "A testing housing.",
+                "cost": [],
+                "required": [],
+                "production": ["bodies_resource", 0.4],
+                "prod_speed": 1
             }
         ]
         }
