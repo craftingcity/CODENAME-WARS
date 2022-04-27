@@ -1,6 +1,6 @@
 {
     "modid" : "default",
-    "version": 0.13,
+    "version": 0.14,
     "author": "jitterbeans",
     "content": {
         "decision": 
@@ -79,8 +79,10 @@
         [
             {
                 "id": "testing_terrain",
+                "representation": "*",
+                "color": 0,
                 "catagory": "terrain",
-                "subcatagory": "testing",
+                "subcatagory": "land",
                 "name": "Blank Terrain",
                 "description": "This peice of terrain is blank, this should only be generated under testing circumstances.",
                 "resources_list": [],
@@ -89,13 +91,27 @@
             },
             {
                 "id": "testing_resource_fields",
+                "representation": "*",
+                "color": 1,
                 "catagory": "terrain",
-                "subcatagory": "testing",
+                "subcatagory": "land",
                 "name": "Resource Terrain",
                 "description": "This peice of terrain is not blank, and yet this should only be generated under testing circumstances.",
                 "resources_list": ["testing_resource"],
                 "assets_list": ["testing_production_building"],
                 "move_speed_multiplier": 0.5
+            },
+            {
+                "id": "testine_water",
+                "representation": "~",
+                "color": 0,
+                "catagory": "terrain",
+                "subcatagory": "water",
+                "name": "Testing Water",
+                "description": "This peice of terrain is water, this should only be generated under testing circumstances.",
+                "resources_list": [],
+                "assets_list": [],
+                "move_speed_multiplier": 1
             }
         ],
         "resource": 
@@ -198,6 +214,8 @@
         [
             {
                 "id": "testing_military",
+                "representation": "U",
+                "color": 2,
                 "catagory": "military",
                 "subcatagory": "unit",
                 "name": "Testing Unit",
@@ -224,6 +242,8 @@
         [
             {
                 "id": "testing_production_building",
+                "representation": "P",
+                "color": 0,
                 "catagory": "asset",
                 "subcatagory": "production",
                 "name": "Testing Production Building",
@@ -235,6 +255,8 @@
             },
             {
                 "id": "testing_instant_housing",
+                "representation": "H",
+                "color": 0,
                 "catagory": "asset",
                 "subcatagory": "housing",
                 "name": "Testing Housing",
@@ -246,6 +268,8 @@
             },
             {
                 "id": "testing_passive_housing",
+                "representation": "H",
+                "color": 1,
                 "catagory": "asset",
                 "subcatagory": "housing",
                 "name": "Testing Housing",

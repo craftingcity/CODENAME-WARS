@@ -1,6 +1,7 @@
 import curses
-from curses import wrapper
+from curses import COLOR_BLACK, COLOR_WHITE, wrapper
 import time
+import json
 
 
 
@@ -103,24 +104,76 @@ def rebindingv1(stdscr):
                 bound_key = current_key
 
 def menuv1(stdscr):
+    ## color
+    curses.init_pair(1, COLOR_WHITE, COLOR_BLACK)
+    BLACK_ON_WHITE = curses.color_pair(1)
+
     ## initialize working vars
     count = 0
     spacer = 4
-    ## populate option array
-    option_arry = ["Option One", "Option Two", "Bingoboard", "Option Four"]
-    ## display options
-    stdscr.clear()
-    for i in option_arry:
-        stdscr.addstr(0, count, i)
-        count += 1
-    stdscr.refresh()
+    selected_option = 0
+    current_key = ""
+    fnaglin = 0
 
+
+    ## populate option array
+    option_array = ["Option One", "Option Two", "Bingoboard", "Option Four"]
 
     ## initialize input handler
-    c = stdscr.getkey()
+    while True:
+        if current_key == "q":
+            break
+        if current_key == "KEY_LEFT":
+            if selected_option > 0:
+                selected_option -= 1
+        if current_key == "KEY_RIGHT":
+            if selected_option < len(option_array):
+                selected_option += 1
+        ## display options
+        stdscr.clear()
+        for item in option_array:
+            stdscr.addstr(0, count, item, BLACK_ON_WHITE)
+            count += len(item) + spacer
+        
+        
+        ## display current selection
+        if selected_option == 0:
+            fnaglin = 0
+        if selected_option > 0:
+            for i in range(selected_option):
+                fnaglin += len(option_array[i]) + spacer
+        stdscr.addstr(0, fnaglin, option_array[selected_option], curses.A_REVERSE)
+        stdscr.addstr(10, 10, f"{current_key}, {selected_option}")
+
+        count = 0
+        fnaglin = 0
+        stdscr.refresh()
+        current_key = stdscr.getkey()
+
+
+## datagrab is a tool to interact with json files, interpreting a list of strings and ints as an ordered path to the requested data
+def datagrab(path, filename):
+    ## i find and read default_mod.json, then close it
+    open_file = open(filename)
+    data = json.loads(open_file.read())
+    open_file.close()
+
+    ## i look at what i read using the path to guid my way
+    for i in path:
+        if i is int:
+            data[i]
+        if i is str:
+            data = data.get(i)
+            
+    ## and thats it! im all done, so ill return the requested data
+    return data
+
+def alpha(stdscr):
+    stdscr.clear()
+    
 
     
 
 
 ## wrapper calls main, giving use of the entire terminal as stdscr
-wrapper(menuv1)
+wrapper(alpha)
