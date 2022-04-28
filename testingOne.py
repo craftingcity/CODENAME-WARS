@@ -156,25 +156,22 @@ def menuv1(stdscr):
 def datagrab(path, filename):
     ## i find and read default_mod.json, then close it
     open_file = open(filename)
-    data = json.loads(open_file.read())
+    data = json.load(open_file)
     open_file.close()
 
-    ## i look at what i read using the path to guid my way
     for i in path:
-        if i is int:
-            data[i]
-        if i is str:
-            data = data.get(i)
-            
-    ## and thats it! im all done, so ill return the requested data
+        data = data[i]
+
     return data
 
-def alpha(stdscr):
-    stdscr.clear()
+def main():
+    data = datagrab(["content", "terrain", 1, "id"], "default_mod.json")
+    print(data)
+    
     
 
     
 
 
 ## wrapper calls main, giving use of the entire terminal as stdscr
-wrapper(alpha)
+main()
