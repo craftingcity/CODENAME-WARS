@@ -3,7 +3,7 @@ from curses import COLOR_BLACK, COLOR_WHITE, wrapper
 import time
 import json
 
-
+# This is a comment meant to see changes to the file. -BW
 
 
 def basic_movement(stdscr):
