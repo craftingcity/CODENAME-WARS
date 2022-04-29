@@ -24,6 +24,7 @@ def datagrab(path, filename):
     return data
 
 class Cell:
+    ## Instance variables
     def __init__(self, y_pos, x_pos, data):
         self.y_pos = y_pos
         self.x_pos = x_pos
@@ -31,21 +32,74 @@ class Cell:
         self.name = data["name"]
         self.representation = data["representation"]
 
+    ## Methods for returning y_pos and x_pos
+    def get_y(self):
+        return self.y_pos
+    def get_x(self):
+        return self.x_pos
+
+    ## Methods for adjusting y_pos and x_pos in increments of one
+    def move_north(self):
+        self.y_pos = self.y_pos - 1
+    def move_south(self):
+        self.y_pos = self.y_pos + 1
+    def move_east(self):
+        self.x_pos = self.x_pos + 1
+    def move_west(self):
+        self.x_pos = self.x_pos - 1
+
+class Box:
+    ## Instance variables
+    def __init__(self, y_top_left, x_top_left, y_bottom_right, x_bottom_right):
+        self.y_top_left = y_top_left
+        self.x_top_left = x_top_left
+        self.y_bottom_right = y_bottom_right
+        self.x_bottom_right = x_bottom_right
+    
+    ## Methods for returning the positional data
+    def get_y_top_left(self):
+        return self.y_top_left
+    def get_x_top_left(self):
+        return self.x_top_left
+    def get_y_bottom_right(self):
+        return self.y_bottom_right
+    def get_x_bottom_right(self):
+        return self.x_bottom_right
+    
+    ## Methods for moving the whole box
+    def move_north(self):
+        self.y_bottom_right = self.y_bottom_right - 1
+        self.y_top_left = self.y_top_left - 1
+    def move_south(self):
+        self.y_bottom_right = self.y_bottom_right + 1
+        self.y_top_left = self.y_top_left + 1
+    def move_east(self):
+        self.x_bottom_right = self.x_bottom_right + 1
+        self.x_top_left = self.x_top_left + 1
+    def move_west(self):
+        self.x_bottom_right = self.x_bottom_right - 1
+        self.x_top_left = self.x_top_left - 1
+
 def alpha_one(stdscr):
+    ##  initalization
+    stdscr.clear()
+    game_pad = curses.newpad(20, 20)
+    game_pad_box = Box(5, 5, 25, 25)
     ## flags
-    MOVE_FLAG = False
+    unit_move_flag = 0
 
     ## variables
     world = []
-    c = ""
+    key = ""
+
 
     ## data
     terrain_data = datagrab(["content", "terrain", 0], "default_mod.json")
     military_data = datagrab(["content", "military", 0], "default_mod.json")
 
     ## logic makes the world go round
-    for i in range(5):
-        for j in range(5):
+    for i in range(19):
+        for j in range(19):
             new_cell = Cell(i, j, terrain_data)
             world.append(new_cell)
 
@@ -54,28 +108,42 @@ def alpha_one(stdscr):
     ## loop
     while True:
         ## process input
-        if (c == "q"):
+        if key == "q":
             break
-        if (c == "m") and not MOVE_FLAG:
-            MOVE_FLAG = True
-        if (c == "m") and MOVE_FLAG:
-            MOVE_FLAG = False
-        if (c == "KEY_UP") and MOVE_FLAG:
-            unit.y_pos += 1
-        if (c == "KEY_DOWN") and MOVE_FLAG:
-            unit.y_pos -= 1
-        if (c == "KEY_RIGHT") and MOVE_FLAG:
-            unit.x_pos += 1
-        if (c == "KEY_LEFT") and MOVE_FLAG:
-            unit.x_pos -= 1
-
+        if key == "t" and unit_move_flag == 0:
+            unit_move_flag = 1
+        if key == "t" and unit_move_flag == 1:
+            unit_move_flag = 0
+        if key == "KEY_UP":
+            if unit_move_flag == 1:
+                unit.move_north()
+            if unit_move_flag == 0:
+                game_pad_box.move_north()
+        if key == "KEY_DOWN":
+            if unit_move_flag == 1:
+                unit.move_south()
+            if unit_move_flag == 0:
+                game_pad_box.move_south()
+        if key == "KEY_RIGHT":
+            if unit_move_flag == 1:
+                unit.move_east()
+            if unit_move_flag == 0:
+                game_pad_box.move_east()
+        if key == "KEY_LEFT":
+            if unit_move_flag == 1:
+                unit.move_west()
+            if unit_move_flag == 0:
+                game_pad_box.move_west()
 
 
         ## draw to screen
         for cell in world:
-            stdscr.addstr(cell.y_pos, cell.x_pos, cell.representation)
-        stdscr.addstr(unit.y_pos, unit.x_pos, unit.representation)
-        c = stdscr.getkey()
+            game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation)
+        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation)
+        stdscr.addstr(10, 10, key)
+        game_pad.refresh(0, 0, game_pad_box.get_y_top_left(), game_pad_box.get_x_top_left(), game_pad_box.get_y_bottom_right(), game_pad_box.get_x_bottom_right())
+        stdscr.refresh()
+        key = stdscr.getkey()
 
 if __name__ == "__main__":
     wrapper(alpha_one)
