@@ -3,7 +3,6 @@
 
 import curses
 from curses import wrapper
-from enum import Flag
 import json
 
 
@@ -81,44 +80,18 @@ class Box:
         self.x_bottom_right = self.x_bottom_right - 1
         self.x_top_left = self.x_top_left - 1
 
-class Flag:
-    ## Instance variables
-    def __init__(self, bool):
-        self.bool = bool
-    
-    ## Method to return the current value of bool
-    def get(self):
-        return self.bool
-    
-    ## Method to set the current value of bool
-    def set(self, new_val):
-        self.bool = new_val
-
 def alpha_one(stdscr):
-    ##  intilize some objects; pad for the map, box for coordinates for the pad
+    ##  initalization
+    stdscr.clear()
     game_pad = curses.newpad(20, 20)
     game_pad_box = Box(5, 5, 25, 25)
-
-    menu_pad = curses.newpad(20, 20)
-    menu_pad_box = Box(40, 40, 60, 60)
-
     ## flags
-    unit_move = False
-    map_move = False
-    menu_flag = True
-
+    unit_move_flag = 0
 
     ## variables
-    current_menu_selection = 0
-    menu_options = ["Move Map", "Move Unit"]
-    menu_iteratable = 0
     world = []
-    key = None
+    key = ""
 
-    ## constants
-    MAX_TUPLE = stdscr.getmaxyx()
-    MAX_HEIGHT = MAX_TUPLE[0]
-    MAX_WIDTH = MAX_TUPLE[1]
 
     ## data
     terrain_data = datagrab(["content", "terrain", 0], "default_mod.json")
@@ -132,82 +105,45 @@ def alpha_one(stdscr):
 
     unit = Cell(0, 0, military_data)
 
-    ## loop for input and screen manipulation
+    ## loop
     while True:
         ## process input
         if key == "q":
             break
+        if key == "t" and unit_move_flag == 0:
+            unit_move_flag = 1
+        if key == "t" and unit_move_flag == 1:
+            unit_move_flag = 0
         if key == "KEY_UP":
-            if unit_move == True:
+            if unit_move_flag == 1:
                 unit.move_north()
-            if map_move == True:
+            if unit_move_flag == 0:
                 game_pad_box.move_north()
-            if menu_flag == True:
-                current_menu_selection -= 1
         if key == "KEY_DOWN":
-            if unit_move == True:
+            if unit_move_flag == 1:
                 unit.move_south()
-            if map_move == True:
+            if unit_move_flag == 0:
                 game_pad_box.move_south()
-            if menu_flag == True:
-                current_menu_selection += 1
         if key == "KEY_RIGHT":
-            if unit_move == True:
+            if unit_move_flag == 1:
                 unit.move_east()
-            if map_move == True:
+            if unit_move_flag == 0:
                 game_pad_box.move_east()
-            if menu_flag == True:
-                current_menu_selection += 1
         if key == "KEY_LEFT":
-            if unit_move == True:
+            if unit_move_flag == 1:
                 unit.move_west()
-            if map_move == True:
+            if unit_move_flag == 0:
                 game_pad_box.move_west()
-            if menu_flag == True:
-                current_menu_selection -= 1
-        if key == "e":
-            if unit_move == True:
-                menu_flag = True
-                unit_move = False
-            if map_move == True:
-                menu_flag = True
-                map_move = False
-            if menu_flag == True:
-                menu_flag = False
-                if current_menu_selection == 0:
-                    map_move = True
-                if current_menu_selection == 1:
-                    unit_move = True
 
 
-
-        ## begin screen write sequence
-        stdscr.clear()
-        stdscr.refresh()
-
-        ## draw to stdscr
-        stdscr.addstr(MAX_HEIGHT - 10, 40, f"Key: {key} UnitMove: {unit_move} MapMove: {map_move} MenuFlag: {menu_flag}")
-        stdscr.refresh()
-
-        ## draw to gamepad 
+        ## draw to screen
         for cell in world:
             game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation)
         game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation)
+        stdscr.addstr(10, 10, key)
         game_pad.refresh(0, 0, game_pad_box.get_y_top_left(), game_pad_box.get_x_top_left(), game_pad_box.get_y_bottom_right(), game_pad_box.get_x_bottom_right())
-        
-        ## draw to menu_pad
-        menu_iteratable = 0
-        for option in menu_options:
-            menu_pad.addstr(menu_iteratable, 0, option)
-            menu_iteratable += 1
-        menu_iteratable = current_menu_selection
-        if menu_flag == True:
-            menu_pad.addstr(menu_iteratable, 0, menu_options[current_menu_selection], curses.A_REVERSE)
-        menu_pad.refresh(0, 0, menu_pad_box.get_y_top_left(), menu_pad_box.get_x_top_left(), menu_pad_box.get_y_bottom_right(), menu_pad_box.get_x_bottom_right())
-
-        ## wait here for a new input to process
+        stdscr.refresh()
         key = stdscr.getkey()
 
-## run a wrapper over alpha_one for proper as-file runs
 if __name__ == "__main__":
     wrapper(alpha_one)
