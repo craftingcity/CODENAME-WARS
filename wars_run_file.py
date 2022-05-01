@@ -145,11 +145,9 @@ class Menu:
     def set_options(self, new_val):
         self.options = new_val
     ## Method for "increasing" current selection
-    ## for current implementation, it *is correct* to decrease the value when plus() is called
     def plus(self):
         self.current_selection += 1
     ## Method for decreasing current selection
-    ## for current implementation, it *is correct* to increase the value when minus() is called
     def minus(self):
         self.current_selection -= 1
     ## Method for getting current selection
@@ -242,7 +240,7 @@ def alpha_one(stdscr):
             if mef:
                 menu_obj.plus()
         ## "o" is used bc I dont quite know how to use 'Enter'
-        if key == "o":
+        if key == "\n":
             ## in older versions, .set() was used, causing a bug where flags would not change?
             ## using .flop() as so seems to have fixed the issue; as long as Flag is never not a bool,
             ## this should be fine, but it'd be tight if flags were more flexable than that.
