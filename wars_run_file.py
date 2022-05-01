@@ -210,6 +210,8 @@ def alpha_one(stdscr):
             if mmf:
                 game_pad_box.move_north()
             if mef:
+                ## this might look wrong, but remember, max y is the bottom of the scr
+                ## therefore the "previous" selection would be above, making minus make sense
                 menu_obj.minus()
         if key == "KEY_DOWN":
             if umf:
@@ -217,6 +219,8 @@ def alpha_one(stdscr):
             if mmf:
                 game_pad_box.move_south()
             if mef:
+                ## this might look wrong, but remember, max y is the bottom of the scr
+                ## therefore the "next" selection would be below, making plus make sense
                 menu_obj.plus()
         if key == "KEY_LEFT":
             if umf:
@@ -232,6 +236,7 @@ def alpha_one(stdscr):
                 game_pad_box.move_east()
             if mef:
                 menu_obj.plus()
+        ## i dont know what key enter is so,
         if key == "o":
             if umf:
                 unit_move_flag.flop()

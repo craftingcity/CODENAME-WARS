@@ -8,8 +8,6 @@ Written in Python, using Curses (https://docs.python.org/3/library/curses.html) 
 2. Secondarily, I need to build the engine before the content. Clearly I'm going to need some basic content to test my engine, but thats not what I mean.
 3. Finally, after building the engine, I can build the content of the game. Unit and Building types, Reasearch, goodies galore.
 
-- design FileToucher class
-
 ### The Big Four
 On the right of the screen, a log and psuedo-topbar-thing with constantly relevant or changing information, on the left, the Gameboard. Appearing only when needed, a contextual Menu that layers and displays relevent information. I call these the big three. I bring the concept from Dwarf Fortress and CDDA, although I'm sure many other games have used it.
 Underneath them, python runs the Engine that makes everything click.
