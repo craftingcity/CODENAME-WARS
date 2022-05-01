@@ -26,8 +26,8 @@ def datagrab(path, filename):
 ## FileToucher is a class of definitions used to interact with data
 class FileToucher:
     ## Instance variables
-    def __init__(self):
-        pass
+    def __init__(self, f):
+        self.f = f
         
     
     ## Method for interpriting f as a string refrencing a json file or list of strings refrencing json files
