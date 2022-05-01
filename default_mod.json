@@ -91,7 +91,7 @@
             },
             {
                 "id": "testing_resource_fields",
-                "representation": "*",
+                "representation": "F",
                 "color": 1,
                 "catagory": "terrain",
                 "subcatagory": "land",

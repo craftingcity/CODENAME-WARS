@@ -80,6 +80,22 @@ class Box:
         self.x_bottom_right = self.x_bottom_right - 1
         self.x_top_left = self.x_top_left - 1
 
+class Flag:
+    ## Instance variables
+    def __init__(self, bool):
+        self.bool = bool
+
+    ## Method for flopping the flag
+    def flop(self):
+        self.bool = not self.bool
+    ## Method for setting the flag
+    def set(self, new_val):
+        self.bool = new_val
+    ## Mehtod for getting the flag
+    def get(self):
+        return self.bool
+
+
 def alpha_one(stdscr):
     ##  initalization
     stdscr.clear()
