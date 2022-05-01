@@ -101,8 +101,11 @@ def alpha_one(stdscr):
     stdscr.clear()
     game_pad = curses.newpad(20, 20)
     game_pad_box = Box(5, 5, 25, 25)
+    menu_options = ["Move Unit", "Move Display", "Quit"]
     ## flags
     unit_move_flag = Flag(False)
+    map_move_flag = Flag(False)
+    menu_engage_flag = Flag(True)
 
     ## variables
     world = []
@@ -131,8 +134,12 @@ def alpha_one(stdscr):
         ## process input
         if key == "q":
             break
-        if key == "t":
-            unit_move_flag.flop()
+        if key == "e":
+            menu_engage_flag.flop()
+        if key == "^[":
+            pass
+        if key == ".":
+            pass
         if key == "KEY_UP":
             if unit_move_flag.get() == True:
                 unit.move_north()
