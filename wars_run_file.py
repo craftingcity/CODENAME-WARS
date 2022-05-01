@@ -48,7 +48,12 @@ class FileToucher:
 
     ## Method for searching a given object for a given target recusively,
     ## allowing for something akin to an id lookup
-    ## def recursive_search(self, obj, target):
+    def recursive_search(self, obj, target):
+        for item in obj:
+            if item == target:
+                return obj
+            if item is (list or dict):
+                self.recursive_search(item, target)
 
 
 ## Cell is a class of definitions and variables used to represent "a board unit"
