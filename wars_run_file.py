@@ -23,6 +23,35 @@ def datagrab(path, filename):
     ## and then i give it back!
     return data
 
+## FileToucher is a class of definitions used to interact with data
+class FileToucher:
+    ## Instance variables
+    def __init__(self):
+        pass
+        
+    
+    ## Method for interpriting f as a string refrencing a json file or list of strings refrencing json files
+    def interp(self):
+        if self.f is list:
+            data_pack = []
+            for i in self.f:
+                open_file = open(i)
+                data = json.load(open_file)
+                open_file.close()
+                data_pack.append(data)
+            return data_pack
+        if self.f is str:
+            open_file = open(self.f)
+            data = json.load(open_file)
+            open_file.close()
+            return data
+
+    ## Method for searching a given object for a given target recusively,
+    ## allowing for something akin to an id lookup
+    ## def recursive_search(self, obj, target):
+
+
+## Cell is a class of definitions and variables used to represent "a board unit"
 class Cell:
     ## Instance variables
     def __init__(self, y_pos, x_pos, data):
@@ -48,6 +77,7 @@ class Cell:
     def move_west(self):
         self.x_pos = self.x_pos - 1
 
+## Box is a class of definitions and variables used to store coordinates for my ease of use
 class Box:
     ## Instance variables
     def __init__(self, y_top_left, x_top_left, y_bottom_right, x_bottom_right):
@@ -80,6 +110,7 @@ class Box:
         self.x_bottom_right = self.x_bottom_right - 1
         self.x_top_left = self.x_top_left - 1
 
+## Flag is a class of variables and definitions used to represent portions of game-state/internal-state
 class Flag:
     ## Instance variables
     def __init__(self, bool):
@@ -95,6 +126,7 @@ class Flag:
     def get(self):
         return self.bool
 
+## Menu is a class of variables and definitions used to represent a menu system
 class Menu:
     ## Instance variables
     def __init__(self, options, current_selection=0):
@@ -107,11 +139,12 @@ class Menu:
     ## Method for returning options in its original form
     def set_options(self, new_val):
         self.options = new_val
-    ## Method for increasing current selection
-    ## decreases variable
+    ## Method for "increasing" current selection
+    ## for current implementation, it *is correct* to decrease the value when plus() is called
     def plus(self):
         self.current_selection += 1
     ## Method for decreasing current selection
+    ## for current implementation, it *is correct* to increase the value when minus() is called
     def minus(self):
         self.current_selection -= 1
     ## Method for getting current selection
@@ -177,14 +210,14 @@ def alpha_one(stdscr):
             if mmf:
                 game_pad_box.move_north()
             if mef:
-                menu_obj.plus()
+                menu_obj.minus()
         if key == "KEY_DOWN":
             if umf:
                 unit.move_south()
             if mmf:
                 game_pad_box.move_south()
             if mef:
-                menu_obj.minus()
+                menu_obj.plus()
         if key == "KEY_LEFT":
             if umf:
                 unit.move_west()
@@ -227,7 +260,8 @@ def alpha_one(stdscr):
         for item in menu_options:
             vert_count += 1
             stdscr.addstr(19 + vert_count, 45, item)
-        stdscr.addstr(20 + cs, 45, menu_options[cs], curses.A_REVERSE)
+        if mef:
+            stdscr.addstr(20 + cs, 45, menu_options[cs], curses.A_REVERSE)
         
         ## draw to game_pad
         for cell in world:
