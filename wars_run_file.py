@@ -55,7 +55,7 @@ class Box:
         self.x_top_left = x_top_left
         self.y_bottom_right = y_bottom_right
         self.x_bottom_right = x_bottom_right
-    
+
     ## Methods for returning the positional data
     def get_y_top_left(self):
         return self.y_top_left
@@ -65,7 +65,7 @@ class Box:
         return self.y_bottom_right
     def get_x_bottom_right(self):
         return self.x_bottom_right
-    
+
     ## Methods for moving the whole box
     def move_north(self):
         self.y_bottom_right = self.y_bottom_right - 1
@@ -95,13 +95,41 @@ class Flag:
     def get(self):
         return self.bool
 
+class Menu:
+    ## Instance variables
+    def __init__(self, options, current_selection=0):
+        self.options = options
+        self.current_selection = current_selection
+    
+    ## Method for returning options in its original form
+    def get_options(self):
+        return self.options
+    ## Method for returning options in its original form
+    def set_options(self, new_val):
+        self.options = new_val
+    ## Method for increasing current selection
+    ## decreases variable
+    def plus(self):
+        self.current_selection += 1
+    ## Method for decreasing current selection
+    def minus(self):
+        self.current_selection -= 1
+    ## Method for getting current selection
+    def get_cs(self):
+        return self.current_selection
+    ## Method for setting current selection
+    def set_cs(self, new_val):
+        self.current_selection = new_val
+
 
 def alpha_one(stdscr):
     ##  initalization
     stdscr.clear()
     game_pad = curses.newpad(20, 20)
     game_pad_box = Box(5, 5, 25, 25)
-    menu_options = ["Move Unit", "Move Display", "Quit"]
+    init_menu_options = ["Move Unit", "Move Display", "Quit"]
+    menu_obj = Menu(init_menu_options)
+
     ## flags
     unit_move_flag = Flag(False)
     map_move_flag = Flag(False)
@@ -110,6 +138,7 @@ def alpha_one(stdscr):
     ## variables
     world = []
     key = ""
+    vert_count = 0
 
 
     ## data
@@ -131,39 +160,74 @@ def alpha_one(stdscr):
         stdscr.clear()
         stdscr.refresh()
 
+        ## check flags
+        umf = unit_move_flag.get()
+        mmf = map_move_flag.get()
+        mef = menu_engage_flag.get()
+
+        ## check vars
+        cs = menu_obj.get_cs()
+
         ## process input
         if key == "q":
             break
-        if key == "e":
-            menu_engage_flag.flop()
-        if key == "^[":
-            pass
-        if key == ".":
-            pass
         if key == "KEY_UP":
-            if unit_move_flag.get() == True:
+            if umf:
                 unit.move_north()
-            if unit_move_flag.get() == False:
+            if mmf:
                 game_pad_box.move_north()
+            if mef:
+                menu_obj.plus()
         if key == "KEY_DOWN":
-            if unit_move_flag.get() == True:
+            if umf:
                 unit.move_south()
-            if unit_move_flag.get() == False:
+            if mmf:
                 game_pad_box.move_south()
-        if key == "KEY_RIGHT":
-            if unit_move_flag.get() == True:
-                unit.move_east()
-            if unit_move_flag.get() == False:
-                game_pad_box.move_east()
+            if mef:
+                menu_obj.minus()
         if key == "KEY_LEFT":
-            if unit_move_flag.get() == True:
+            if umf:
                 unit.move_west()
-            if unit_move_flag.get() == False:
+            if mmf:
                 game_pad_box.move_west()
+            if mef:
+                menu_obj.minus()
+        if key == "KEY_RIGHT":
+            if umf:
+                unit.move_east()
+            if mmf:
+                game_pad_box.move_east()
+            if mef:
+                menu_obj.plus()
+        if key == "o":
+            if umf:
+                unit_move_flag.set(False)
+                menu_engage_flag.set(True)
+            if mmf:
+                map_move_flag.set(False)
+                menu_engage_flag.set(True)
+            if mef:
+                menu_engage_flag.set(False)
+                if cs == 0:
+                    unit_move_flag.set(True)
+                if cs == 1:
+                    map_move_flag.set(True)
+                if cs == 2:
+                    break
+        
 
 
         ## draw to stdscr; debug assistance
-        stdscr.addstr(20, 0, f"Key: {key}, UMF: {unit_move_flag.get()}")
+        stdscr.addstr(20, 0, f"Key: {key}, UMF: {umf}, MMF: {mmf}, MEF:{mef}")
+
+        ## draw menu to stdscr
+        vert_count = 0
+        menu_options = menu_obj.get_options()
+        cs = menu_obj.get_cs()
+        for item in menu_options:
+            vert_count += 1
+            stdscr.addstr(19 + vert_count, 45, item)
+        stdscr.addstr(20 + cs, 45, menu_options[cs], curses.A_REVERSE)
         
         ## draw to game_pad
         for cell in world:
