@@ -262,7 +262,9 @@ def alpha_one(stdscr):
                 if cs == 2:
                     break
         
-        ## re-check necessary flags
+        ## re-check flags
+        umf = unit_move_flag.get()
+        mmf = map_move_flag.get()
         mef = menu_engage_flag.get()
 
         ## draw to stdscr; debug assistance
