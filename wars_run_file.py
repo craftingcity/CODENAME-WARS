@@ -1,4 +1,4 @@
-##  This is the CODENAME-WARS Alpha V2.0
+##  This is the CODENAME-WARS Alpha V1.8
 ##  Coded by Ian Wuth, 5/1/2022
 
 import curses
