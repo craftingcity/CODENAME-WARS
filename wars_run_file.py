@@ -102,7 +102,7 @@ def alpha_one(stdscr):
     game_pad = curses.newpad(20, 20)
     game_pad_box = Box(5, 5, 25, 25)
     ## flags
-    unit_move_flag = 0
+    unit_move_flag = Flag(False)
 
     ## variables
     world = []
@@ -131,34 +131,32 @@ def alpha_one(stdscr):
         ## process input
         if key == "q":
             break
-        if key == "t" and unit_move_flag == 0:
-            unit_move_flag = 1
-        if key == "t" and unit_move_flag == 1:
-            unit_move_flag = 0
+        if key == "t":
+            unit_move_flag.flop()
         if key == "KEY_UP":
-            if unit_move_flag == 1:
+            if unit_move_flag.get() == True:
                 unit.move_north()
-            if unit_move_flag == 0:
+            if unit_move_flag.get() == False:
                 game_pad_box.move_north()
         if key == "KEY_DOWN":
-            if unit_move_flag == 1:
+            if unit_move_flag.get() == True:
                 unit.move_south()
-            if unit_move_flag == 0:
+            if unit_move_flag.get() == False:
                 game_pad_box.move_south()
         if key == "KEY_RIGHT":
-            if unit_move_flag == 1:
+            if unit_move_flag.get() == True:
                 unit.move_east()
-            if unit_move_flag == 0:
+            if unit_move_flag.get() == False:
                 game_pad_box.move_east()
         if key == "KEY_LEFT":
-            if unit_move_flag == 1:
+            if unit_move_flag.get() == True:
                 unit.move_west()
-            if unit_move_flag == 0:
+            if unit_move_flag.get() == False:
                 game_pad_box.move_west()
 
 
         ## draw to stdscr; debug assistance
-        stdscr.addstr(20, 0, f"Key: {key}, UMF: {unit_move_flag}")
+        stdscr.addstr(20, 0, f"Key: {key}, UMF: {unit_move_flag.get()}")
         
         ## draw to game_pad
         for cell in world:
