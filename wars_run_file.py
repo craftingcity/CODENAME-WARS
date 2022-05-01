@@ -107,6 +107,11 @@ def alpha_one(stdscr):
 
     ## loop
     while True:
+        ## reinitilize the screen for a fresh frame
+        ## refresh after clear or pads dont show
+        stdscr.clear()
+        stdscr.refresh()
+
         ## process input
         if key == "q":
             break
@@ -136,12 +141,17 @@ def alpha_one(stdscr):
                 game_pad_box.move_west()
 
 
-        ## draw to screen
+        ## draw to stdscr; debug assistance
+        stdscr.addstr(20, 0, f"Key: {key}, UMF: {unit_move_flag}")
+        
+        ## draw to game_pad
         for cell in world:
             game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation)
+        
         game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation)
-        stdscr.addstr(10, 10, key)
         game_pad.refresh(0, 0, game_pad_box.get_y_top_left(), game_pad_box.get_x_top_left(), game_pad_box.get_y_bottom_right(), game_pad_box.get_x_bottom_right())
+        
+        ## wait here for input
         stdscr.refresh()
         key = stdscr.getkey()
 
