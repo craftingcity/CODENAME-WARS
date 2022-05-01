@@ -234,21 +234,22 @@ def alpha_one(stdscr):
                 menu_obj.plus()
         if key == "o":
             if umf:
-                unit_move_flag.set(False)
-                menu_engage_flag.set(True)
+                unit_move_flag.flop()
+                menu_engage_flag.flop()
             if mmf:
-                map_move_flag.set(False)
-                menu_engage_flag.set(True)
+                map_move_flag.flop()
+                menu_engage_flag.flop()
             if mef:
-                menu_engage_flag.set(False)
+                menu_engage_flag.flop()
                 if cs == 0:
-                    unit_move_flag.set(True)
+                    unit_move_flag.flop()
                 if cs == 1:
-                    map_move_flag.set(True)
+                    map_move_flag.flop()
                 if cs == 2:
                     break
         
-
+        ## re-check necessary flags
+        mef = menu_engage_flag.get()
 
         ## draw to stdscr; debug assistance
         stdscr.addstr(20, 0, f"Key: {key}, UMF: {umf}, MMF: {mmf}, MEF:{mef}")
