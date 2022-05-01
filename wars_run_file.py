@@ -1,5 +1,5 @@
-##  This is the CODENAME-WARS Alpha 1
-##  Coded by Ian Wuth, 4/26/2022
+##  This is the CODENAME-WARS Alpha V2.0
+##  Coded by Ian Wuth, 5/1/2022
 
 import curses
 from curses import wrapper
@@ -118,18 +118,18 @@ class Box:
 ## Flag is a class of variables and definitions used to represent portions of game-state/internal-state
 class Flag:
     ## Instance variables
-    def __init__(self, bool):
-        self.bool = bool
+    def __init__(self, var):
+        self.var = var
 
     ## Method for flopping the flag
     def flop(self):
-        self.bool = not self.bool
+        self.var = not self.var
     ## Method for setting the flag
     def set(self, new_val):
-        self.bool = new_val
+        self.var = new_val
     ## Mehtod for getting the flag
     def get(self):
-        return self.bool
+        return self.var
 
 ## Menu is a class of variables and definitions used to represent a menu system
 class Menu:
@@ -241,8 +241,12 @@ def alpha_one(stdscr):
                 game_pad_box.move_east()
             if mef:
                 menu_obj.plus()
-        ## i dont know what key enter is so,
+        ## "o" is used bc I dont quite know how to use 'Enter'
         if key == "o":
+            ## in older versions, .set() was used, causing a bug where flags would not change?
+            ## using .flop() as so seems to have fixed the issue; as long as Flag is never not a bool,
+            ## this should be fine, but it'd be tight if flags were more flexable than that.
+            ## so this may cause further issues :)
             if umf:
                 unit_move_flag.flop()
                 menu_engage_flag.flop()
@@ -285,5 +289,6 @@ def alpha_one(stdscr):
         stdscr.refresh()
         key = stdscr.getkey()
 
+## run correctly as standalone
 if __name__ == "__main__":
     wrapper(alpha_one)
