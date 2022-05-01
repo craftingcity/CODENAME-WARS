@@ -23,7 +23,7 @@ def datagrab(path, filename):
     ## and then i give it back!
     return data
 
-## FileToucher is a class of definitions used to interact with data
+## FileToucher is a class of definitions used to interact with data on disk
 class FileToucher:
     ## Instance variables
     def __init__(self, f):
@@ -39,12 +39,12 @@ class FileToucher:
                 data = json.load(open_file)
                 open_file.close()
                 data_pack.append(data)
-            return data_pack
+            self.data = data_pack
         if self.f is str:
             open_file = open(self.f)
             data = json.load(open_file)
             open_file.close()
-            return data
+            self.data = data
 
     ## Method for searching a given object for a given target recusively,
     ## allowing for something akin to an id lookup
