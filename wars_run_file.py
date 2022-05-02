@@ -175,6 +175,7 @@ def alpha_one(stdscr):
     world = []
     key = ""
     vert_count = 0
+    run_time = 0
 
 
     ## data
@@ -195,6 +196,7 @@ def alpha_one(stdscr):
         ## refresh after clear or pads dont show
         stdscr.clear()
         stdscr.refresh()
+        run_time += 1
 
         ## check flags
         umf = unit_move_flag.get()
@@ -266,7 +268,7 @@ def alpha_one(stdscr):
         mef = menu_engage_flag.get()
 
         ## draw to stdscr; debug assistance
-        stdscr.addstr(20, 0, f"Key: {key}, UMF: {umf}, MMF: {mmf}, MEF:{mef}")
+        stdscr.addstr(30, 0, f"Key: {key}, UMF: {umf}, MMF: {mmf}, MEF:{mef}, Time: {run_time}")
 
         ## draw menu to stdscr
         vert_count = 0
