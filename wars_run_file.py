@@ -63,8 +63,6 @@ class Cell:
         self.y_pos = y_pos
         self.x_pos = x_pos
         self.data = data
-        self.name = data["name"]
-        self.representation = data["representation"]
 
     ## Methods for returning y_pos and x_pos
     def get_y(self):
@@ -82,14 +80,38 @@ class Cell:
     def move_west(self):
         self.x_pos = self.x_pos - 1
 
+class Terrain(Cell):
+    ## Instance variables
+    def __init__(self, y_pos, x_pos, data):
+        Cell.__init__(self, y_pos, x_pos, data)
+        self.name = self.data["name"]
+        self.representation = self.data["representation"]
+        self.color = curses.color_pair(self.data["color"])
+    
+class Unit(Cell):
+    ## Instance variables
+    def __init__(self, y_pos, x_pos, data):
+        Cell.__init__(self, y_pos, x_pos, data)
+        self.name = self.data["name"]
+        self.representation = self.data["representation"]
+        self.color = curses.color_pair(self.data["color"])
+    
+class Coord:
+    ## Instance variables
+    def __init__(self, y, x):
+        self.y = y
+        self.x = x
+
 ## Box is a class of definitions and variables used to store coordinates for my ease of use
 class Box:
     ## Instance variables
     def __init__(self, y_top_left, x_top_left, y_bottom_right, x_bottom_right):
-        self.y_top_left = y_top_left
-        self.x_top_left = x_top_left
-        self.y_bottom_right = y_bottom_right
-        self.x_bottom_right = x_bottom_right
+        top_left = Coord(y_top_left, x_top_left)
+        bottom_right = Coord(y_bottom_right, x_bottom_right)
+        self.y_top_left = top_left.y
+        self.x_top_left = top_left.x
+        self.y_bottom_right = bottom_right.y
+        self.x_bottom_right = bottom_right.x
 
     ## Methods for returning the positional data
     def get_y_top_left(self):
@@ -185,10 +207,10 @@ def alpha_one(stdscr):
     ## logic makes the world go round
     for i in range(19):
         for j in range(19):
-            new_cell = Cell(i, j, terrain_data)
-            world.append(new_cell)
+            new_terrain = Terrain(i, j, terrain_data)
+            world.append(new_terrain)
 
-    unit = Cell(0, 0, military_data)
+    unit = Unit(0, 0, military_data)
 
     ## loop
     while True:
