@@ -28,11 +28,9 @@ class FileToucher:
     ## Instance variables
     def __init__(self, f):
         self.f = f
-        
-    
-    ## Method for interpriting f as a string refrencing a json file or list of strings refrencing json files
-    def interp(self):
-        if self.f is list:
+        self.data = "Empty"
+        ## check what we were passed, react appropriately
+        if type(self.f) in (list, dict):
             data_pack = []
             for i in self.f:
                 open_file = open(i)
@@ -40,20 +38,26 @@ class FileToucher:
                 open_file.close()
                 data_pack.append(data)
             self.data = data_pack
-        if self.f is str:
+        if type(self.f) is str:
             open_file = open(self.f)
             data = json.load(open_file)
             open_file.close()
             self.data = data
 
-    ## Method for searching a given object for a given target recusively,
+    ## Method for searching current data for a given target recusively,
     ## allowing for something akin to an id lookup
-    def recursive_search(self, obj, target):
-        for item in obj:
-            if item == target:
-                return obj
-            if item is (list or dict):
-                self.recursive_search(item, target)
+    def recursive_search_by_key(self, target):
+        data_backup = self.data
+        found = []
+        if type(self.data) is dict:
+            for i in self.data:
+                if type(i) in (list, dict):
+                    self.data = i
+                    self.recursive_search_by_key(target)
+                elif i == target:
+                    found.append(self.data)
+        self.data = data_backup
+        return found
 
 
 ## Cell is a class of definitions and variables used to represent "a board unit"
@@ -201,6 +205,8 @@ def alpha_one(stdscr):
 
 
     ## data
+    ft = FileToucher("default_mod.json")
+    ft_terrain = ft.recursive_search_by_key("terrain")
     terrain_data = datagrab(["content", "terrain", 0], "default_mod.json")
     military_data = datagrab(["content", "military", 0], "default_mod.json")
 
@@ -263,7 +269,6 @@ def alpha_one(stdscr):
                 game_pad_box.move_east()
             if mef:
                 menu_obj.plus()
-        ## "o" is used bc I dont quite know how to use 'Enter'
         if key == "\n":
             ## in older versions, .set() was used, causing a bug where flags would not change?
             ## using .flop() as so seems to have fixed the issue; as long as Flag is never not a bool,
@@ -291,6 +296,7 @@ def alpha_one(stdscr):
 
         ## draw to stdscr; debug assistance
         stdscr.addstr(30, 0, f"Key: {key}, UMF: {umf}, MMF: {mmf}, MEF:{mef}, Time: {run_time}")
+        stdscr.addstr(32, 0, f"FT: {ft_terrain}")
 
         ## draw menu to stdscr
         vert_count = 0
