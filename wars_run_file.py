@@ -207,6 +207,13 @@ def alpha_one(stdscr):
     init_menu_options = ["Move Unit", "Move Display", "Quit"]
     menu_obj = Menu(init_menu_options)
 
+    ## colors
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLUE)
+
     ## flags
     unit_move_flag = Flag(False)
     map_move_flag = Flag(False)
@@ -225,7 +232,7 @@ def alpha_one(stdscr):
     terrain_data = datagrab(["content", "terrain", 0], "default_mod.json")
     military_data = datagrab(["content", "military", 0], "default_mod.json")
 
-    ## logic makes the world go round
+    ## supply data to objects
     for i in range(19):
         for j in range(19):
             new_terrain = Terrain(i, j, terrain_data)
@@ -325,9 +332,9 @@ def alpha_one(stdscr):
         
         ## draw to game_pad
         for cell in world:
-            game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation)
+            game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation, curses.color_pair(cell.color))
         
-        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation)
+        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation, curses.color_pair(unit.color))
         game_pad.refresh(0, 0, game_pad_box.get_y_top_left(), game_pad_box.get_x_top_left(), game_pad_box.get_y_bottom_right(), game_pad_box.get_x_bottom_right())
         
         ## wait here for input
