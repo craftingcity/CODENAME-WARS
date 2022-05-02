@@ -1,0 +1,284 @@
+{
+    "modid" : "default",
+    "version": 0.14,
+    "author": "jitterbeans",
+    "content": {
+        "decision": 
+        [
+            {
+                "id": "testing_decision_bodies_pp",
+                "catagory": "decision",
+                "subcatagory": "testing",
+                "name": "Testing Decision: Bodies and PP",
+                "description":"This will apply a +10% bonus to Bodies and Political Power gained for 120 ticks.",
+                "cost": 10,
+                "consequences": 
+                [
+                    {
+                        "id": "bodies_buff",
+                        "catagory": "effect",
+                        "subcatagory": "buff",
+                        "name": "Buff: Bodies",
+                        "description":"+10% to Bodies gained from all sources.",
+                        "duration": 120,
+                        "target": ["bodies_gained_to_be_modified"],
+                        "effect": 1.1
+                    },
+                    {
+                        "id": "political_power_buff",
+                        "catagory": "effect",
+                        "subcatagory": "buff",
+                        "name": "Buff: Political Power",
+                        "description":"+10% to Political Power gained from all sources.",
+                        "duration": 120,
+                        "target": ["political_power_gained_per_tick"],
+                        "effect": 1.1
+                    }
+                ]
+            },
+            {
+                "id": "testing_decision_impose_auth",
+                "catagory": "decision",
+                "subcatagory": "ideology",
+                "name": "Testing Decision: Impose Ideology",
+                "description":"This will impose authoritarianism.",
+                "cost": 10,
+                "concequences": 
+                [
+                    {
+                        "id": "auth_impose_ideology_testing",
+                        "catagory": "effect",
+                        "subcatagory": "ideology",
+                        "target": ["bool_auth_v_anar"],
+                        "effect": 0
+
+                    }
+                ]
+            },
+            {
+                "id": "testing_decision_impose_anar",
+                "catagory": "decision",
+                "subcatagory": "ideology",
+                "name": "Testing Decision: Impose Ideology",
+                "description":"This will impose anarachy.",
+                "cost": 10,
+                "concequences": 
+                [
+                    {
+                        "id": "anar_impose_ideology_testing",
+                        "catagory": "effect",
+                        "subcatagory": "ideology",
+                        "target": ["bool_auth_v_anar"],
+                        "effect": 1
+
+                    }
+                ]
+            }
+        ],
+        "terrain": 
+        [
+            {
+                "id": "testing_terrain",
+                "representation": "*",
+                "color": 0,
+                "catagory": "terrain",
+                "subcatagory": "land",
+                "name": "Blank Terrain",
+                "description": "This peice of terrain is blank, this should only be generated under testing circumstances.",
+                "resources_list": [],
+                "assets_list": ["testing_housing"],
+                "move_speed_multiplier": 1
+            },
+            {
+                "id": "testing_resource_fields",
+                "representation": "F",
+                "color": 1,
+                "catagory": "terrain",
+                "subcatagory": "land",
+                "name": "Resource Terrain",
+                "description": "This peice of terrain is not blank, and yet this should only be generated under testing circumstances.",
+                "resources_list": ["testing_resource"],
+                "assets_list": ["testing_production_building"],
+                "move_speed_multiplier": 0.5
+            },
+            {
+                "id": "testing_water",
+                "representation": "~",
+                "color": 0,
+                "catagory": "terrain",
+                "subcatagory": "water",
+                "name": "Testing Water",
+                "description": "This peice of terrain is water, this should only be generated under testing circumstances.",
+                "resources_list": [],
+                "assets_list": [],
+                "move_speed_multiplier": 1
+            }
+        ],
+        "resource": 
+        [
+            {
+                "id": "testing_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Testing Resource",
+                "description": "This resource is for testing purposes only."
+            },
+            {
+                "id": "bodies_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Bodies",
+                "description": "Bodies are a numerical representation of your citizenry who are ready and willing to become military units."
+            },
+            {
+                "id": "political_power_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Political Power",
+                "description": "Political Power is a numerical representation of your influence within your faction."
+            },
+            {
+                "id": "science_points_resource",
+                "catagory": "resource",
+                "subcatagory": "testing",
+                "name": "Science Points",
+                "description": "Science Points is a numerical representation of your scientific progression."
+            }
+        ],
+        "tech": 
+        [
+            {
+                "id": "testing_technology_resource_production",
+                "catagory": "technology",
+                "subcatagory": "testing",
+                "name": "Resource Production Technology",
+                "description": "This is a testing tech that will allow you to build the required asset for 'testing_resource' extraction.",
+                "cost": 100
+            }
+        ],
+        "ideology": 
+        [
+            {
+                "id": "testing_ideology_scale_auth_v_anar",
+                "catagory": "ideology",
+                "subcatagory": "scale",
+                "ideology_matrix": 
+                    {
+                        "0": "Authoritarian",
+                        "1": "Anarcho"
+                    }
+
+            },
+            {
+                "id": "testing_ideology_scale_comm_v_capi",
+                "catagory": "ideology",
+                "subcatagory": "scale",
+                "ideology_matrix": 
+                    {
+                        "0": "Communist",
+                        "1": "Campitalist"
+                    }
+            }
+        ],
+        "citizen": 
+        [
+            {
+                "id": "testing_citizen_anarchocapitalist",
+                "catagory": "citizen",
+                "subcatagory": "testing",
+                "ideal_matrix": {
+                    "testing_ideology_scale_auth_v_anar": 1,
+                    "testing_ideology_scale_comm_v_capi": 1
+                }
+            },
+            {
+                "id": "testing_citizen_authoritariancommunist",
+                "catagory": "citizen",
+                "subcatagory": "testing",
+                "ideal_matrix": {
+                    "testing_ideology_scale_auth_v_anar": 0,
+                    "testing_ideology_scale_comm_v_capi": 0
+                }
+            },
+            {
+                "id": "testing_citizen_centrist",
+                "catagory": "citizen",
+                "subcatagory": "testing",
+                "ideal_matrix": {
+                    "testing_ideology_scale_auth_v_anar": 0.5,
+                    "testing_ideology_scale_comm_v_capi": 0.5
+                }
+            }
+        ],
+        "military": 
+        [
+            {
+                "id": "testing_military",
+                "representation": "U",
+                "color": 2,
+                "catagory": "military",
+                "subcatagory": "unit",
+                "name": "Testing Unit",
+                "description": "This is a testing military unit.",
+                "training_cost": 10,
+                "bodies_cost": 10,
+                "equipment_cost": [],
+                "attack": 10,
+                "defense": 5,
+                "move_speed": 2,
+                "preperation": 5,
+                "strategy": 
+                {
+                    "id": "strat_military_prowess",
+                    "catagory": "military",
+                    "subcatagory": "strategy",
+                    "increase_prep_vs": [],
+                    "decrease_prep_vs": []
+
+                }
+            }
+        ],
+        "asset": 
+        [
+            {
+                "id": "testing_production_building",
+                "representation": "P",
+                "color": 0,
+                "catagory": "asset",
+                "subcatagory": "production",
+                "name": "Testing Production Building",
+                "description": "A testing building that produces a testing resource.",
+                "cost": [],
+                "required": ["testing_technology_resource_production"],
+                "production": ["testing_resource", 1],
+                "prod_speed": 1
+            },
+            {
+                "id": "testing_instant_housing",
+                "representation": "H",
+                "color": 0,
+                "catagory": "asset",
+                "subcatagory": "housing",
+                "name": "Testing Housing",
+                "description": "A testing housing.",
+                "cost": [],
+                "required": [],
+                "production": ["bodies_resource", 16],
+                "prod_speed": 0
+            },
+            {
+                "id": "testing_passive_housing",
+                "representation": "H",
+                "color": 1,
+                "catagory": "asset",
+                "subcatagory": "housing",
+                "name": "Testing Housing",
+                "description": "A testing housing.",
+                "cost": [],
+                "required": [],
+                "production": ["bodies_resource", 0.4],
+                "prod_speed": 1
+            }
+        ]
+        }
+}

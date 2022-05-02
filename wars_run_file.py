@@ -28,52 +28,30 @@ class FileToucher:
     ## Instance variables
     def __init__(self, f):
         self.f = f
-        self.data = "Empty"
-        ## check what we were passed, react appropriately
-        if type(self.f) in (list, dict):
-            data_pack = []
-            for i in self.f:
-                open_file = open(i)
-                data = json.load(open_file)
+        self.holding = []
+        ## read f into holding as json data
+        ## correctly interpret single string file-names and lists of string file-names
+        if type(f) is list:
+            for item in f:
+                open_file = open(item)
+                self.holding.append(json.load(open_file))
                 open_file.close()
-                data_pack.append(data)
-            self.data = data_pack
-        if type(self.f) is str:
-            open_file = open(self.f)
-            data = json.load(open_file)
+        if type(f) is str:
+            open_file = open(f)
+            self.holding.append(json.load(open_file))
             open_file.close()
-            self.data = data
-
-    ## Method for searching current data for a given target recusively,
-    ## allowing for something akin to an id lookup
-    def recursive_search_by_key(self, target):
-        data_backup = self.data
-        found = []
-        if type(self.data) is dict:
-            for v in self.data:
-                if type(v) is not str:
-                    if self.data[v] == target:
-                        found.append(self.data)
-                    if type(self.data[v]) in (list, dict):
-                        self.data = self.data[v]
-                        self.recursive_search_by_key(target)
-                if type(v) is str:
-                    if v == target:
-                        found.append(self.data)
-                    if type(v) in (list, dict):
-                        self.data = v
-                        self.recursive_search_by_key(target)
-        elif type(self.data) is list:
-            for item in self.data:
-                if item == target:
-                    found.append(self.data)
-                if type(item) in (list, dict):
-                    self.data = item
-                    self.recursive_search_by_key(target)
-                
-        self.data = data_backup
-        return found
-
+    
+    ## Method for obtaining a dictionary with key-value pairs for each id found in the loaded files
+    def id_lookup(self, value_to_see):
+        self.final = {}
+        counter = 0
+        for item in self.holding:
+            if item["content"][counter]["id"] == value_to_see:
+                key = item["content"][counter]["id"]
+                value = item["content"][counter]
+                self.final.update({key:value})
+            counter += 1
+        return self.final
 
 ## Cell is a class of definitions and variables used to represent "a board unit"
 class Cell:
@@ -105,7 +83,6 @@ class Terrain(Cell):
         Cell.__init__(self, y_pos, x_pos, data)
         self.name = self.data["name"]
         self.representation = self.data["representation"]
-        self.color = curses.color_pair(self.data["color"])
     
 class Unit(Cell):
     ## Instance variables
@@ -113,7 +90,6 @@ class Unit(Cell):
         Cell.__init__(self, y_pos, x_pos, data)
         self.name = self.data["name"]
         self.representation = self.data["representation"]
-        self.color = curses.color_pair(self.data["color"])
     
 class Coord:
     ## Instance variables
@@ -228,17 +204,17 @@ def alpha_one(stdscr):
 
     ## data
     ft = FileToucher("default_mod.json")
-    ft_terrain = ft.recursive_search_by_key("terrain")
-    terrain_data = datagrab(["content", "terrain", 0], "default_mod.json")
-    military_data = datagrab(["content", "military", 0], "default_mod.json")
+    terrain_data = ft.id_lookup("testing_resource_fields")
+    military_data = ft.id_lookup("testing_production_building")
+
 
     ## supply data to objects
     for i in range(19):
         for j in range(19):
-            new_terrain = Terrain(i, j, terrain_data)
+            new_terrain = Terrain(i, j, terrain_data["testing_resource_fields"])
             world.append(new_terrain)
 
-    unit = Unit(0, 0, military_data)
+    unit = Unit(0, 0, military_data["testing_production_building"])
 
     ## loop
     while True:
@@ -318,7 +294,6 @@ def alpha_one(stdscr):
 
         ## draw to stdscr; debug assistance
         stdscr.addstr(30, 0, f"Key: {key}, UMF: {umf}, MMF: {mmf}, MEF:{mef}, Time: {run_time}")
-        stdscr.addstr(32, 0, f"FT: {ft_terrain}")
 
         ## draw menu to stdscr
         vert_count = 0
