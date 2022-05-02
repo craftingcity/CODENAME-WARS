@@ -50,12 +50,27 @@ class FileToucher:
         data_backup = self.data
         found = []
         if type(self.data) is dict:
-            for i in self.data:
-                if type(i) in (list, dict):
-                    self.data = i
-                    self.recursive_search_by_key(target)
-                elif i == target:
+            for v in self.data:
+                if type(v) is not str:
+                    if self.data[v] == target:
+                        found.append(self.data)
+                    if type(self.data[v]) in (list, dict):
+                        self.data = self.data[v]
+                        self.recursive_search_by_key(target)
+                if type(v) is str:
+                    if v == target:
+                        found.append(self.data)
+                    if type(v) in (list, dict):
+                        self.data = v
+                        self.recursive_search_by_key(target)
+        elif type(self.data) is list:
+            for item in self.data:
+                if item == target:
                     found.append(self.data)
+                if type(item) in (list, dict):
+                    self.data = item
+                    self.recursive_search_by_key(target)
+                
         self.data = data_backup
         return found
 
