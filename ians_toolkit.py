@@ -9,7 +9,9 @@ import json
 ## Or just format my files consistantly so that nothing goes awry.
 ## I suppose that will do.
 
-## Meet FileReader! She only takes a filename, just liker her sister.
+## Meet FileReader! She takes either a string or a list of strings and turns them
+## into yummy yummy useable data
+
 class FileReader:
     ## Instance variables
     def __init__(self, r):
@@ -47,7 +49,8 @@ class FileReader:
     def grab(self, id):
         return self.final[id]
 
-## Meet FileWriter! She only takes a filename, just liker her sister.
+## Meet FileWriter! She only takes a filename, 
+## but she'll mark down exactly what you what how you want it!
 class FileWriter:
     ## Instance variables
     def __init__(self, w):
