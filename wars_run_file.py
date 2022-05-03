@@ -4,47 +4,35 @@
 import curses
 from curses import wrapper
 import json
+import time
 
 
 ## The purpose of Alpha one is twofold;
 ## First, a file read-write to a json
 ## Second, an implimentation of "the big three" - the map (and most everything else you see), menu (and the basic controlls), and log (specifically what my cursor is looking at)
 
-
-## datagrab is a tool to read json files, interpreting a list of strings and ints as an ordered path to the requested data
-def datagrab(path, filename):
-    ## i find and read default_mod.json, then close it
-    open_file = open(filename)
-    data = json.load(open_file)
-    open_file.close()
-    ## then i interprit the path to find the requested data
-    for i in path:
-        data = data[i]
-    ## and then i give it back!
-    return data
-
-## FileToucher is a class of definitions used to interact with data on disk
-class FileToucher:
+## FileReader is a class of definitions used to interact with "default" formatted mods / json files
+class FileReader:
     ## Instance variables
-    def __init__(self, f):
-        self.f = f
+    def __init__(self, r):
+        self.r = r
         self.holding = []
         self.modlist = []
         self.final = {}
         
-        ## read f into holding as json data
+        ## read r into holding as json data
         ## correctly interpret single string file-names and lists of string file-names
-        if type(f) is list:
-            for item in f:
-                open_file = open(item)
+        if type(r) is list:
+            for item in r:
+                open_file = open(item, "r")
                 self.holding.append(json.load(open_file))
                 open_file.close()
-        if type(f) is str:
-            open_file = open(f)
+        if type(r) is str:
+            open_file = open(r, "r")
             self.holding.append(json.load(open_file))
             open_file.close()
         
-        ## examine each file,
+        ## examine the contents of holding
         for data in self.holding:
             ## bind variables for this run of the loop
             content = data["content"]
@@ -57,8 +45,47 @@ class FileToucher:
             for item in content:
                 self.final.update({item["id"]:item})
     
+    ## Method for getting an item loaded by FileReader by its id
     def grab(self, id):
         return self.final[id]
+
+class FileWriter:
+    ## Instance variables
+    def __init__(self, w):
+        self.w = w
+
+    def write(self, input):
+        open_file = open(self.w, "w")
+        open_file.write(input)
+        open_file.close()
+
+    def append(self, input):
+        open_file = open(self.w, "a")
+        open_file.write(input)
+        open_file.close()
+
+class Logger(FileWriter):
+    ## Instance variables
+    def __init__(self, w):
+        FileWriter.__init__(self, w)
+
+    def log(self, message, level=10):
+        current_time = time.gmtime()
+        self.append(f"{current_time}:{level}:{message}")
+
+class World(FileWriter):
+    ## Instance variables
+    def __init__(self, w):
+        FileWriter.__init__(self, w)
+        ## check if this world has data
+        open_file = open(self.w, "r")
+        if open_file == "":
+            self.write("world instanced")
+        open_file.close()
+    
+    def save(self, w):
+        self.append("world saved")
+
 
 
         
@@ -214,9 +241,9 @@ def alpha_one(stdscr):
 
 
     ## data
-    ft = FileToucher("default_mod.json")
-    terrain_data = ft.grab("testing_resource_fields")
-    military_data = ft.grab("testing_military")
+    fr = FileReader("default_mod.json")
+    terrain_data = fr.grab("testing_resource_fields")
+    military_data = fr.grab("testing_military")
 
 
     ## supply data to objects
