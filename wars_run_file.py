@@ -15,6 +15,14 @@ import time
 ## - [ ] Finalize major read/write structures
 ## - [ ] Impliment basic UI
 
+## This is the World class. It's a file handler, but;
+## Its been slightly modified to write some data to a file
+## on initialization, but only if that file is empty.
+## Which means World will recognize it's work (or anyone else's as something that exists)
+## So: (Ideally, in the end,) it will one-time write a branch of metadata
+## and then never touch it again, editing only the "play" data
+## Pretty sick right?!
+
 class World(FileWriter):
     ## Instance variables
     def __init__(self, w):
@@ -35,19 +43,26 @@ class World(FileWriter):
         current_time = time.gmtime()
         self.append(f"World Saved at {current_time}\n")
 
-class Terrain(Cell):
-    ## Instance variables
+## Here we create multiple classes who all play a large part in organizing
+## the systems on-stage and behind-the-scenes
+## (ie, frontend and backend :) )
+
+class VisualCell(Cell):
+     ## Instance variables
     def __init__(self, y_pos, x_pos, data):
         Cell.__init__(self, y_pos, x_pos, data)
         self.name = self.data["name"]
         self.representation = self.data["representation"]
+
+class Terrain(VisualCell):
+    ## Instance variables
+    def __init__(self, y_pos, x_pos, data):
+        VisualCell.__init__(self, y_pos, x_pos, data)
     
-class Unit(Cell):
+class Unit(VisualCell):
     ## Instance variables
     def __init__(self, y_pos, x_pos, data):
-        Cell.__init__(self, y_pos, x_pos, data)
-        self.name = self.data["name"]
-        self.representation = self.data["representation"]
+        VisualCell.__init__(self, y_pos, x_pos, data)
 
 def alpha_one(stdscr):
     ##  initalization
