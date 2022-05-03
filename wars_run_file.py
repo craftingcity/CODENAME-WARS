@@ -26,21 +26,21 @@ def datagrab(path, filename):
 ## FileToucher is a class of definitions used to interact with data on disk
 class FileToucher:
     ## Instance variables
-    def __init__(self, f):
-        self.f = f
+    def __init__(self, read):
+        self.read = read
         self.holding = []
         self.modlist = []
         self.final = {}
         
-        ## read f into holding as json data
+        ## read "read" into holding as json data
         ## correctly interpret single string file-names and lists of string file-names
-        if type(f) is list:
-            for item in f:
+        if type(read) is list:
+            for item in read:
                 open_file = open(item)
                 self.holding.append(json.load(open_file))
                 open_file.close()
-        if type(f) is str:
-            open_file = open(f)
+        if type(read) is str:
+            open_file = open(read)
             self.holding.append(json.load(open_file))
             open_file.close()
         
