@@ -1,190 +1,68 @@
-##  This is the CODENAME-WARS Alpha V1.8
+##  This is the CODENAME-WARS Alpha V2.0
 ##  Coded by Ian Wuth, 5/1/2022
 
 import curses
 from curses import wrapper
+from ians_toolkit import *
 import json
+import time
 
 
-## The purpose of Alpha one is twofold;
-## First, a file read-write to a json
-## Second, an implimentation of "the big three" - the map (and most everything else you see), menu (and the basic controlls), and log (specifically what my cursor is looking at)
+## Welcome back to the Alpha of CODENAME WARS
+## Here in version two, we've cleaned up the space some, come take a look around!
+## Our goals for this generation are to...
+## - [ ] Create a cursor
+## - [ ] Finalize major read/write structures
+## - [ ] Impliment basic UI
 
+## This is the World class. It's a file handler, but;
+## Its been slightly modified to write some data to a file
+## on initialization, but only if that file is empty.
+## Which means World will recognize it's work (or anyone else's as something that exists)
+## So: (Ideally, in the end,) it will one-time write a branch of metadata
+## and then never touch it again, editing only the "play" data
+## Pretty sick right?!
 
-## datagrab is a tool to read json files, interpreting a list of strings and ints as an ordered path to the requested data
-def datagrab(path, filename):
-    ## i find and read default_mod.json, then close it
-    open_file = open(filename)
-    data = json.load(open_file)
-    open_file.close()
-    ## then i interprit the path to find the requested data
-    for i in path:
-        data = data[i]
-    ## and then i give it back!
-    return data
-
-## FileToucher is a class of definitions used to interact with data on disk
-class FileToucher:
+class World(FileWriter):
     ## Instance variables
-    def __init__(self, read):
-        self.read = read
-        self.holding = []
-        self.modlist = []
-        self.final = {}
-        
-        ## read "read" into holding as json data
-        ## correctly interpret single string file-names and lists of string file-names
-        if type(read) is list:
-            for item in read:
-                open_file = open(item)
-                self.holding.append(json.load(open_file))
-                open_file.close()
-        if type(read) is str:
-            open_file = open(read)
-            self.holding.append(json.load(open_file))
-            open_file.close()
-        
-        ## examine each file,
-        for data in self.holding:
-            ## bind variables for this run of the loop
-            content = data["content"]
-            modid = data["modid"]
-            version = data["version"]
-            author = data["author"]
-            ## append some metadata to the "modlist"
-            self.modlist.append(f"{modid} - v{version}, by {author}")
-            ## key seen items by their "id"
-            for item in content:
-                self.final.update({item["id"]:item})
+    def __init__(self, w):
+        FileWriter.__init__(self, w)
+        ## check if this world has data
+        try:
+            open_file = open(self.w, "r")
+        except FileNotFoundError:
+            open_file = open(self.w, "x")
+        file_data = open_file.read()
+        if file_data == "":
+            self.write("World Instanced\n")
+        else:
+            self.append("World Loaded\n")
+        open_file.close()
     
-    def grab(self, id):
-        return self.final[id]
+    def save(self):
+        current_time = time.gmtime()
+        self.append(f"World Saved at {current_time}\n")
 
+## Here we create multiple classes who all play a large part in organizing
+## the systems on-stage and behind-the-scenes
+## (ie, frontend and backend :) )
 
-        
-
-
-## Cell is a class of definitions and variables used to represent "a board unit"
-class Cell:
-    ## Instance variables
-    def __init__(self, y_pos, x_pos, data):
-        self.y_pos = y_pos
-        self.x_pos = x_pos
-        self.data = data
-
-    ## Methods for returning y_pos and x_pos
-    def get_y(self):
-        return self.y_pos
-    def get_x(self):
-        return self.x_pos
-
-    ## Methods for adjusting y_pos and x_pos in increments of one
-    def move_north(self):
-        self.y_pos = self.y_pos - 1
-    def move_south(self):
-        self.y_pos = self.y_pos + 1
-    def move_east(self):
-        self.x_pos = self.x_pos + 1
-    def move_west(self):
-        self.x_pos = self.x_pos - 1
-
-class Terrain(Cell):
-    ## Instance variables
+class VisualCell(Cell):
+     ## Instance variables
     def __init__(self, y_pos, x_pos, data):
         Cell.__init__(self, y_pos, x_pos, data)
         self.name = self.data["name"]
         self.representation = self.data["representation"]
-    
-class Unit(Cell):
+
+class Terrain(VisualCell):
     ## Instance variables
     def __init__(self, y_pos, x_pos, data):
-        Cell.__init__(self, y_pos, x_pos, data)
-        self.name = self.data["name"]
-        self.representation = self.data["representation"]
+        VisualCell.__init__(self, y_pos, x_pos, data)
     
-class Coord:
+class Unit(VisualCell):
     ## Instance variables
-    def __init__(self, y, x):
-        self.y = y
-        self.x = x
-
-## Box is a class of definitions and variables used to store coordinates for my ease of use
-class Box:
-    ## Instance variables
-    def __init__(self, y_top_left, x_top_left, y_bottom_right, x_bottom_right):
-        top_left = Coord(y_top_left, x_top_left)
-        bottom_right = Coord(y_bottom_right, x_bottom_right)
-        self.y_top_left = top_left.y
-        self.x_top_left = top_left.x
-        self.y_bottom_right = bottom_right.y
-        self.x_bottom_right = bottom_right.x
-
-    ## Methods for returning the positional data
-    def get_y_top_left(self):
-        return self.y_top_left
-    def get_x_top_left(self):
-        return self.x_top_left
-    def get_y_bottom_right(self):
-        return self.y_bottom_right
-    def get_x_bottom_right(self):
-        return self.x_bottom_right
-
-    ## Methods for moving the whole box
-    def move_north(self):
-        self.y_bottom_right = self.y_bottom_right - 1
-        self.y_top_left = self.y_top_left - 1
-    def move_south(self):
-        self.y_bottom_right = self.y_bottom_right + 1
-        self.y_top_left = self.y_top_left + 1
-    def move_east(self):
-        self.x_bottom_right = self.x_bottom_right + 1
-        self.x_top_left = self.x_top_left + 1
-    def move_west(self):
-        self.x_bottom_right = self.x_bottom_right - 1
-        self.x_top_left = self.x_top_left - 1
-
-## Flag is a class of variables and definitions used to represent portions of game-state/internal-state
-class Flag:
-    ## Instance variables
-    def __init__(self, var):
-        self.var = var
-
-    ## Method for flopping the flag
-    def flop(self):
-        self.var = not self.var
-    ## Method for setting the flag
-    def set(self, new_val):
-        self.var = new_val
-    ## Mehtod for getting the flag
-    def get(self):
-        return self.var
-
-## Menu is a class of variables and definitions used to represent a menu system
-class Menu:
-    ## Instance variables
-    def __init__(self, options, current_selection=0):
-        self.options = options
-        self.current_selection = current_selection
-    
-    ## Method for returning options in its original form
-    def get_options(self):
-        return self.options
-    ## Method for returning options in its original form
-    def set_options(self, new_val):
-        self.options = new_val
-    ## Method for "increasing" current selection
-    def plus(self):
-        self.current_selection += 1
-    ## Method for decreasing current selection
-    def minus(self):
-        self.current_selection -= 1
-    ## Method for getting current selection
-    def get_cs(self):
-        return self.current_selection
-    ## Method for setting current selection
-    def set_cs(self, new_val):
-        self.current_selection = new_val
-
+    def __init__(self, y_pos, x_pos, data):
+        VisualCell.__init__(self, y_pos, x_pos, data)
 
 def alpha_one(stdscr):
     ##  initalization
@@ -214,9 +92,9 @@ def alpha_one(stdscr):
 
 
     ## data
-    ft = FileToucher("default_mod.json")
-    terrain_data = ft.grab("testing_resource_fields")
-    military_data = ft.grab("testing_military")
+    fr = FileReader("default_mod.json")
+    terrain_data = fr.grab("testing_resource_fields")
+    military_data = fr.grab("testing_military")
 
 
     ## supply data to objects
