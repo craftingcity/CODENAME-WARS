@@ -1,6 +1,7 @@
 ##  This is the CODENAME-WARS Alpha V1.8
 ##  Coded by Ian Wuth, 5/1/2022
 
+from asyncio import current_task
 import curses
 from curses import wrapper
 import json
@@ -71,20 +72,27 @@ class Logger(FileWriter):
 
     def log(self, message, level=10):
         current_time = time.gmtime()
-        self.append(f"{current_time}:{level}:{message}")
+        self.append(f"{current_time}:{level}:{message}\n")
 
 class World(FileWriter):
     ## Instance variables
     def __init__(self, w):
         FileWriter.__init__(self, w)
         ## check if this world has data
-        open_file = open(self.w, "r")
-        if open_file == "":
-            self.write("world instanced")
+        try:
+            open_file = open(self.w, "r")
+        except FileNotFoundError:
+            open_file = open(self.w, "x")
+        file_data = open_file.read()
+        if file_data == "":
+            self.write("World Instanced\n")
+        else:
+            self.append("World Loaded\n")
         open_file.close()
     
-    def save(self, w):
-        self.append("world saved")
+    def save(self):
+        current_time = time.gmtime()
+        self.append(f"World Saved at {current_time}\n")
 
 
 
