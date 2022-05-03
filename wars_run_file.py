@@ -30,7 +30,8 @@ class FileToucher:
         self.f = f
         self.holding = []
         self.modlist = []
-        count = 0
+        self.final = {}
+        
         ## read f into holding as json data
         ## correctly interpret single string file-names and lists of string file-names
         if type(f) is list:
@@ -42,14 +43,23 @@ class FileToucher:
             open_file = open(f)
             self.holding.append(json.load(open_file))
             open_file.close()
-        ## generate modlist
-        for item in self.holding:
-            modid = self.holding[count]["modid"]
-            version = self.holding[count]["version"]
-            author = self.holding[count]["author"]
-            information = f"{modid} - v{version}, by {author}"
-            self.modlist.append(information)
-            count += 1
+        
+        ## examine each file,
+        for data in self.holding:
+            ## bind variables for this run of the loop
+            content = data["content"]
+            modid = data["modid"]
+            version = data["version"]
+            author = data["author"]
+            ## append some metadata to the "modlist"
+            self.modlist.append(f"{modid} - v{version}, by {author}")
+            ## key seen items by their "id"
+            for item in content:
+                self.final.update({item["id"]:item})
+    
+    def grab(self, id):
+        return self.final[id]
+
 
         
 
@@ -205,17 +215,17 @@ def alpha_one(stdscr):
 
     ## data
     ft = FileToucher("default_mod.json")
-    terrain_data = ft.id_lookup("testing_resource_fields")
-    military_data = ft.id_lookup("testing_production_building")
+    terrain_data = ft.grab("testing_resource_fields")
+    military_data = ft.grab("testing_military")
 
 
     ## supply data to objects
     for i in range(19):
         for j in range(19):
-            new_terrain = Terrain(i, j, terrain_data["testing_resource_fields"])
+            new_terrain = Terrain(i, j, terrain_data)
             world.append(new_terrain)
 
-    unit = Unit(0, 0, military_data["testing_production_building"])
+    unit = Unit(0, 0, military_data)
 
     ## loop
     while True:
@@ -308,9 +318,9 @@ def alpha_one(stdscr):
         
         ## draw to game_pad
         for cell in world:
-            game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation, curses.color_pair(cell.color))
+            game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation)
         
-        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation, curses.color_pair(unit.color))
+        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation)
         game_pad.refresh(0, 0, game_pad_box.get_y_top_left(), game_pad_box.get_x_top_left(), game_pad_box.get_y_bottom_right(), game_pad_box.get_x_bottom_right())
         
         ## wait here for input
