@@ -29,6 +29,8 @@ class FileToucher:
     def __init__(self, f):
         self.f = f
         self.holding = []
+        self.modlist = []
+        count = 0
         ## read f into holding as json data
         ## correctly interpret single string file-names and lists of string file-names
         if type(f) is list:
@@ -40,18 +42,17 @@ class FileToucher:
             open_file = open(f)
             self.holding.append(json.load(open_file))
             open_file.close()
-    
-    ## Method for obtaining a dictionary with key-value pairs for each id found in the loaded files
-    def id_lookup(self, value_to_see):
-        self.final = {}
-        counter = 0
+        ## generate modlist
         for item in self.holding:
-            if item["content"][counter]["id"] == value_to_see:
-                key = item["content"][counter]["id"]
-                value = item["content"][counter]
-                self.final.update({key:value})
-            counter += 1
-        return self.final
+            modid = self.holding[count]["modid"]
+            version = self.holding[count]["version"]
+            author = self.holding[count]["author"]
+            information = f"{modid} - v{version}, by {author}"
+            self.modlist.append(information)
+            count += 1
+
+        
+
 
 ## Cell is a class of definitions and variables used to represent "a board unit"
 class Cell:
