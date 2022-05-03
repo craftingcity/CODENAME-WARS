@@ -1,78 +1,19 @@
-##  This is the CODENAME-WARS Alpha V1.8
+##  This is the CODENAME-WARS Alpha V2.0
 ##  Coded by Ian Wuth, 5/1/2022
 
-from asyncio import current_task
 import curses
 from curses import wrapper
+from ians_toolkit import *
 import json
 import time
 
 
-## The purpose of Alpha one is twofold;
-## First, a file read-write to a json
-## Second, an implimentation of "the big three" - the map (and most everything else you see), menu (and the basic controlls), and log (specifically what my cursor is looking at)
-
-## FileReader is a class of definitions used to interact with "default" formatted mods / json files
-class FileReader:
-    ## Instance variables
-    def __init__(self, r):
-        self.r = r
-        self.holding = []
-        self.modlist = []
-        self.final = {}
-        
-        ## read r into holding as json data
-        ## correctly interpret single string file-names and lists of string file-names
-        if type(r) is list:
-            for item in r:
-                open_file = open(item, "r")
-                self.holding.append(json.load(open_file))
-                open_file.close()
-        if type(r) is str:
-            open_file = open(r, "r")
-            self.holding.append(json.load(open_file))
-            open_file.close()
-        
-        ## examine the contents of holding
-        for data in self.holding:
-            ## bind variables for this run of the loop
-            content = data["content"]
-            modid = data["modid"]
-            version = data["version"]
-            author = data["author"]
-            ## append some metadata to the "modlist"
-            self.modlist.append(f"{modid} - v{version}, by {author}")
-            ## key seen items by their "id"
-            for item in content:
-                self.final.update({item["id"]:item})
-    
-    ## Method for getting an item loaded by FileReader by its id
-    def grab(self, id):
-        return self.final[id]
-
-class FileWriter:
-    ## Instance variables
-    def __init__(self, w):
-        self.w = w
-
-    def write(self, input):
-        open_file = open(self.w, "w")
-        open_file.write(input)
-        open_file.close()
-
-    def append(self, input):
-        open_file = open(self.w, "a")
-        open_file.write(input)
-        open_file.close()
-
-class Logger(FileWriter):
-    ## Instance variables
-    def __init__(self, w):
-        FileWriter.__init__(self, w)
-
-    def log(self, message, level=10):
-        current_time = time.gmtime()
-        self.append(f"{current_time}:{level}:{message}\n")
+## Welcome back to the Alpha of CODENAME WARS
+## Here in version two, we've cleaned up the space some, come take a look around!
+## Our goals for this generation are to...
+## - [ ] Create a cursor
+## - [ ] Finalize major read/write structures
+## - [ ] Impliment basic UI
 
 class World(FileWriter):
     ## Instance variables
@@ -94,35 +35,6 @@ class World(FileWriter):
         current_time = time.gmtime()
         self.append(f"World Saved at {current_time}\n")
 
-
-
-        
-
-
-## Cell is a class of definitions and variables used to represent "a board unit"
-class Cell:
-    ## Instance variables
-    def __init__(self, y_pos, x_pos, data):
-        self.y_pos = y_pos
-        self.x_pos = x_pos
-        self.data = data
-
-    ## Methods for returning y_pos and x_pos
-    def get_y(self):
-        return self.y_pos
-    def get_x(self):
-        return self.x_pos
-
-    ## Methods for adjusting y_pos and x_pos in increments of one
-    def move_north(self):
-        self.y_pos = self.y_pos - 1
-    def move_south(self):
-        self.y_pos = self.y_pos + 1
-    def move_east(self):
-        self.x_pos = self.x_pos + 1
-    def move_west(self):
-        self.x_pos = self.x_pos - 1
-
 class Terrain(Cell):
     ## Instance variables
     def __init__(self, y_pos, x_pos, data):
@@ -136,90 +48,6 @@ class Unit(Cell):
         Cell.__init__(self, y_pos, x_pos, data)
         self.name = self.data["name"]
         self.representation = self.data["representation"]
-    
-class Coord:
-    ## Instance variables
-    def __init__(self, y, x):
-        self.y = y
-        self.x = x
-
-## Box is a class of definitions and variables used to store coordinates for my ease of use
-class Box:
-    ## Instance variables
-    def __init__(self, y_top_left, x_top_left, y_bottom_right, x_bottom_right):
-        top_left = Coord(y_top_left, x_top_left)
-        bottom_right = Coord(y_bottom_right, x_bottom_right)
-        self.y_top_left = top_left.y
-        self.x_top_left = top_left.x
-        self.y_bottom_right = bottom_right.y
-        self.x_bottom_right = bottom_right.x
-
-    ## Methods for returning the positional data
-    def get_y_top_left(self):
-        return self.y_top_left
-    def get_x_top_left(self):
-        return self.x_top_left
-    def get_y_bottom_right(self):
-        return self.y_bottom_right
-    def get_x_bottom_right(self):
-        return self.x_bottom_right
-
-    ## Methods for moving the whole box
-    def move_north(self):
-        self.y_bottom_right = self.y_bottom_right - 1
-        self.y_top_left = self.y_top_left - 1
-    def move_south(self):
-        self.y_bottom_right = self.y_bottom_right + 1
-        self.y_top_left = self.y_top_left + 1
-    def move_east(self):
-        self.x_bottom_right = self.x_bottom_right + 1
-        self.x_top_left = self.x_top_left + 1
-    def move_west(self):
-        self.x_bottom_right = self.x_bottom_right - 1
-        self.x_top_left = self.x_top_left - 1
-
-## Flag is a class of variables and definitions used to represent portions of game-state/internal-state
-class Flag:
-    ## Instance variables
-    def __init__(self, var):
-        self.var = var
-
-    ## Method for flopping the flag
-    def flop(self):
-        self.var = not self.var
-    ## Method for setting the flag
-    def set(self, new_val):
-        self.var = new_val
-    ## Mehtod for getting the flag
-    def get(self):
-        return self.var
-
-## Menu is a class of variables and definitions used to represent a menu system
-class Menu:
-    ## Instance variables
-    def __init__(self, options, current_selection=0):
-        self.options = options
-        self.current_selection = current_selection
-    
-    ## Method for returning options in its original form
-    def get_options(self):
-        return self.options
-    ## Method for returning options in its original form
-    def set_options(self, new_val):
-        self.options = new_val
-    ## Method for "increasing" current selection
-    def plus(self):
-        self.current_selection += 1
-    ## Method for decreasing current selection
-    def minus(self):
-        self.current_selection -= 1
-    ## Method for getting current selection
-    def get_cs(self):
-        return self.current_selection
-    ## Method for setting current selection
-    def set_cs(self, new_val):
-        self.current_selection = new_val
-
 
 def alpha_one(stdscr):
     ##  initalization
