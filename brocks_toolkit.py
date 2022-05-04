@@ -90,6 +90,7 @@ class Color_decoder:
             }
         }
         
+    def init_colors(self):
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
