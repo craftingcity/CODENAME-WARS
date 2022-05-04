@@ -183,19 +183,8 @@ class Menu:
     def set_cs(self, new_val):
         self.current_selection = new_val
 
-## Colortable is a class that creates a matrix of color parirs
-## ColorTable's methods interact with that matrix, returning the desired color from string keys
-class ColorTable:
-    ## Instance variables
-    def __init__(self):
-        final = {}
-        n = 1
-        color_list = [curses.COLOR_BLACK, curses.COLOR_BLUE, curses.COLOR_CYAN, curses.COLOR_GREEN, curses.COLOR_MAGENTA, curses.COLOR_RED, curses.COLOR_WHITE, curses.COLOR_YELLOW]
-        for fore in color_list:
-            final.update({fore:{}})
-            color_list_sans = color_list.copy()
-            color_list_sans.pop(fore)
-            for back in color_list_sans:
-                n += 1
-                curses.init_pair(n, fore, back)
-                final[fore].update({back:n})
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()
