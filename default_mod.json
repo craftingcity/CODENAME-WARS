@@ -71,7 +71,7 @@
         {
             "id": "testing_military",
             "representation": "U",
-            "colors": ["PURPLE", "BLACK"],
+            "colors": ["RED", "BLACK"],
             "catagory": "military",
             "subcatagory": "unit",
             "name": "Testing Unit",
@@ -97,7 +97,7 @@
         {
             "id": "testing_production_building",
             "representation": "P",
-            "colors": ["ORANGE", "BLACK"],
+            "colors": ["YELLOW", "BLACK"],
             "catagory": "asset",
             "subcatagory": "production",
             "name": "Testing Production Building",

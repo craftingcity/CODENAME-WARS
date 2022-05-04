@@ -1,7 +1,5 @@
 import curses
 from curses import wrapper
-import locale
-locale.setlocale(locale.LC_ALL,"")
 
 
 # Curses colors are: 0:black, 1:red, 2:green, 3:yellow, 4:blue, 5:magenta, 6:cyan, and 7:white
@@ -90,7 +88,6 @@ class Color_decoder:
             }
         }
         
-    def init_colors(self):
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)

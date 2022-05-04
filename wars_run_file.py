@@ -4,6 +4,7 @@
 import curses
 from curses import wrapper
 from ians_toolkit import *
+from brocks_toolkit import Color_decoder
 import json
 import time
 
@@ -54,6 +55,17 @@ class VisualCell(Cell):
         Cell.__init__(self, y_pos, x_pos, data)
         self.name = self.data["name"]
         self.representation = self.data["representation"]
+        self.colors = self.data["colors"]
+    
+    ## Methods for returning visual data
+    def get_name(self):
+        return self.name
+    
+    def get_rep(self):
+        return self.representation
+
+    def get_colors(self):
+        return self.colors
 
 class Terrain(VisualCell):
     ## Instance variables
@@ -65,20 +77,92 @@ class Unit(VisualCell):
     def __init__(self, y_pos, x_pos, data):
         VisualCell.__init__(self, y_pos, x_pos, data)
 
+
 def alpha_one(stdscr):
     ##  initalization
     stdscr.clear()
+
+    ## visualization
     game_pad = curses.newpad(20, 20)
     game_pad_box = Box(5, 5, 25, 25)
     init_menu_options = ["Move Unit", "Move Display", "Quit"]
     menu_obj = Menu(init_menu_options)
 
     ## colors
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_BLUE, curses.COLOR_BLACK)
-    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(4, curses.COLOR_GREEN, curses.COLOR_BLACK)
-    curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_BLUE)
+    ## initilizing these pairs in this order is necessary for Color_decoder() to work properly
+    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
+    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
+    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_BLUE)
+    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_MAGENTA)
+    curses.init_pair(7, curses.COLOR_BLACK, curses.COLOR_CYAN)
+    curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
+
+    curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(10, curses.COLOR_RED, curses.COLOR_RED)
+    curses.init_pair(11, curses.COLOR_RED, curses.COLOR_GREEN)
+    curses.init_pair(12, curses.COLOR_RED, curses.COLOR_YELLOW)
+    curses.init_pair(13, curses.COLOR_RED, curses.COLOR_BLUE)
+    curses.init_pair(14, curses.COLOR_RED, curses.COLOR_MAGENTA)
+    curses.init_pair(15, curses.COLOR_RED, curses.COLOR_CYAN)
+    curses.init_pair(16, curses.COLOR_RED, curses.COLOR_WHITE)
+
+    curses.init_pair(17, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(18, curses.COLOR_GREEN, curses.COLOR_RED)
+    curses.init_pair(19, curses.COLOR_GREEN, curses.COLOR_GREEN)
+    curses.init_pair(20, curses.COLOR_GREEN, curses.COLOR_YELLOW)
+    curses.init_pair(21, curses.COLOR_GREEN, curses.COLOR_BLUE)
+    curses.init_pair(22, curses.COLOR_GREEN, curses.COLOR_MAGENTA)
+    curses.init_pair(23, curses.COLOR_GREEN, curses.COLOR_CYAN)
+    curses.init_pair(24, curses.COLOR_GREEN, curses.COLOR_WHITE)
+
+    curses.init_pair(25, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(26, curses.COLOR_YELLOW, curses.COLOR_RED)
+    curses.init_pair(27, curses.COLOR_YELLOW, curses.COLOR_GREEN)
+    curses.init_pair(28, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
+    curses.init_pair(29, curses.COLOR_YELLOW, curses.COLOR_BLUE)
+    curses.init_pair(30, curses.COLOR_YELLOW, curses.COLOR_MAGENTA)
+    curses.init_pair(31, curses.COLOR_YELLOW, curses.COLOR_CYAN)
+    curses.init_pair(32, curses.COLOR_YELLOW, curses.COLOR_WHITE)
+
+    curses.init_pair(33, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(34, curses.COLOR_BLUE, curses.COLOR_RED)
+    curses.init_pair(35, curses.COLOR_BLUE, curses.COLOR_GREEN)
+    curses.init_pair(36, curses.COLOR_BLUE, curses.COLOR_YELLOW)
+    curses.init_pair(37, curses.COLOR_BLUE, curses.COLOR_BLUE)
+    curses.init_pair(38, curses.COLOR_BLUE, curses.COLOR_MAGENTA)
+    curses.init_pair(39, curses.COLOR_BLUE, curses.COLOR_CYAN)
+    curses.init_pair(40, curses.COLOR_BLUE, curses.COLOR_WHITE)
+
+    curses.init_pair(41, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+    curses.init_pair(42, curses.COLOR_MAGENTA, curses.COLOR_RED)
+    curses.init_pair(43, curses.COLOR_MAGENTA, curses.COLOR_GREEN)
+    curses.init_pair(44, curses.COLOR_MAGENTA, curses.COLOR_YELLOW)
+    curses.init_pair(45, curses.COLOR_MAGENTA, curses.COLOR_BLUE)
+    curses.init_pair(46, curses.COLOR_MAGENTA, curses.COLOR_MAGENTA)
+    curses.init_pair(47, curses.COLOR_MAGENTA, curses.COLOR_CYAN)
+    curses.init_pair(48, curses.COLOR_MAGENTA, curses.COLOR_WHITE)
+
+    curses.init_pair(49, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(50, curses.COLOR_CYAN, curses.COLOR_RED)
+    curses.init_pair(51, curses.COLOR_CYAN, curses.COLOR_GREEN)
+    curses.init_pair(52, curses.COLOR_CYAN, curses.COLOR_YELLOW)
+    curses.init_pair(53, curses.COLOR_CYAN, curses.COLOR_BLUE)
+    curses.init_pair(54, curses.COLOR_CYAN, curses.COLOR_MAGENTA)
+    curses.init_pair(55, curses.COLOR_CYAN, curses.COLOR_CYAN)
+    curses.init_pair(56, curses.COLOR_CYAN, curses.COLOR_WHITE)
+
+    curses.init_pair(57, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(58, curses.COLOR_WHITE, curses.COLOR_RED)
+    curses.init_pair(59, curses.COLOR_WHITE, curses.COLOR_GREEN)
+    curses.init_pair(60, curses.COLOR_WHITE, curses.COLOR_YELLOW)
+    curses.init_pair(61, curses.COLOR_WHITE, curses.COLOR_BLUE)
+    curses.init_pair(62, curses.COLOR_WHITE, curses.COLOR_MAGENTA)
+    curses.init_pair(63, curses.COLOR_WHITE, curses.COLOR_CYAN)
+    curses.init_pair(64, curses.COLOR_WHITE, curses.COLOR_WHITE)
+
+    cd = Color_decoder()
 
     ## flags
     unit_move_flag = Flag(False)
@@ -106,7 +190,7 @@ def alpha_one(stdscr):
 
     unit = Unit(0, 0, military_data)
 
-    ## loop
+    ## loop for mechanics
     while True:
         ## reinitilize the screen for a fresh frame
         ## refresh after clear or pads dont show
@@ -197,9 +281,14 @@ def alpha_one(stdscr):
         
         ## draw to game_pad
         for cell in world:
-            game_pad.addstr(cell.y_pos, cell.x_pos, cell.representation)
+            y_pos = cell.get_y()
+            x_pos = cell.get_x()
+            rep = cell.get_rep()
+            colors = cell.get_colors()
+            color_pair = curses.color_pair(cd.get_pair(colors[0], colors[1]))
+            game_pad.addstr(y_pos, x_pos, rep, color_pair)
         
-        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation)
+        game_pad.addstr(unit.y_pos, unit.x_pos, unit.representation, curses.color_pair(cd.get_pair(unit.colors[0], unit.colors[1])))
         game_pad.refresh(0, 0, game_pad_box.get_y_top_left(), game_pad_box.get_x_top_left(), game_pad_box.get_y_bottom_right(), game_pad_box.get_x_bottom_right())
         
         ## wait here for input
