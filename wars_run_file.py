@@ -32,6 +32,7 @@ class World(FileWriter):
             open_file = open(self.w, "r")
         except FileNotFoundError:
             open_file = open(self.w, "x")
+            open_file = open(self.w, "r")
         file_data = open_file.read()
         if file_data == "":
             self.write("World Instanced\n")
