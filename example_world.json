@@ -1,0 +1,32 @@
+{
+    "permanent": {
+        "date_created": "5/4/2022",
+        "date_started": "3/24/0103",
+        "modlist": ["default_mod.json"],
+        "mode": "single",
+        "num_players": 1
+    },
+    "current": {
+        "factions": [
+            {
+                "fac_name": "Joe's Raiders",
+                "current_leader": "Joe Shmo",
+                "current_laws": [],
+                "capital": "Joe's Place"
+            },
+            {
+                "fac_name": "Yummi's Fallen",
+                "current_leader": "Yummi Sakai",
+                "current_laws": [],
+                "capital": "Yummi's Place"
+            }
+        ],
+        "boardstate": {
+            "terrain": [],
+            "assets": [],
+            "citizens": [],
+            "units": [],
+
+        }
+    }
+}

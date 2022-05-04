@@ -15,25 +15,26 @@ import time
 ## - [ ] Create a cursor
 ## - [ ] Finalize major read/write structures
 ## - [ ] Impliment basic UI
+## - [x] Integrate color
 
-## This is the World class. It's a file handler, but;
+## This is the World class. It inherits from FileWriter.
 ## Its been slightly modified to write some data to a file
 ## on initialization, but only if that file is empty.
-## Which means World will recognize it's work (or anyone else's as something that exists)
+## Which means World will recognize it's work (or anyone else's as something that exists).
 ## So: (Ideally, in the end,) it will one-time write a branch of metadata
-## and then never touch it again, editing only the "play" data
+## and then never touch it again, editing only the "play" data.
 ## Pretty sick right?!
 
 class World(FileWriter):
     ## Instance variables
-    def __init__(self, w):
-        FileWriter.__init__(self, w)
+    def __init__(self, f):
+        FileWriter.__init__(self, f)
         ## check if this world has data
         try:
-            open_file = open(self.w, "r")
+            open_file = open(self.f, "r")
         except FileNotFoundError:
-            open_file = open(self.w, "x")
-            open_file = open(self.w, "r")
+            open_file = open(self.f, "x")
+            open_file = open(self.f, "r")
         file_data = open_file.read()
         if file_data == "":
             self.write("World Instanced\n")
@@ -44,6 +45,7 @@ class World(FileWriter):
     def save(self):
         current_time = time.localtime()
         self.append(f"World Saved at {current_time}\n")
+        
 
 ## Here we create multiple classes who all play a large part in organizing
 ## the systems on-stage and behind-the-scenes
@@ -89,79 +91,6 @@ def alpha_one(stdscr):
     menu_obj = Menu(init_menu_options)
 
     ## colors
-    ## initilizing these pairs in this order is necessary for Color_decoder() to work properly
-    curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_RED)
-    curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)
-    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_YELLOW)
-    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_BLUE)
-    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_MAGENTA)
-    curses.init_pair(7, curses.COLOR_BLACK, curses.COLOR_CYAN)
-    curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
-
-    curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(10, curses.COLOR_RED, curses.COLOR_RED)
-    curses.init_pair(11, curses.COLOR_RED, curses.COLOR_GREEN)
-    curses.init_pair(12, curses.COLOR_RED, curses.COLOR_YELLOW)
-    curses.init_pair(13, curses.COLOR_RED, curses.COLOR_BLUE)
-    curses.init_pair(14, curses.COLOR_RED, curses.COLOR_MAGENTA)
-    curses.init_pair(15, curses.COLOR_RED, curses.COLOR_CYAN)
-    curses.init_pair(16, curses.COLOR_RED, curses.COLOR_WHITE)
-
-    curses.init_pair(17, curses.COLOR_GREEN, curses.COLOR_BLACK)
-    curses.init_pair(18, curses.COLOR_GREEN, curses.COLOR_RED)
-    curses.init_pair(19, curses.COLOR_GREEN, curses.COLOR_GREEN)
-    curses.init_pair(20, curses.COLOR_GREEN, curses.COLOR_YELLOW)
-    curses.init_pair(21, curses.COLOR_GREEN, curses.COLOR_BLUE)
-    curses.init_pair(22, curses.COLOR_GREEN, curses.COLOR_MAGENTA)
-    curses.init_pair(23, curses.COLOR_GREEN, curses.COLOR_CYAN)
-    curses.init_pair(24, curses.COLOR_GREEN, curses.COLOR_WHITE)
-
-    curses.init_pair(25, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-    curses.init_pair(26, curses.COLOR_YELLOW, curses.COLOR_RED)
-    curses.init_pair(27, curses.COLOR_YELLOW, curses.COLOR_GREEN)
-    curses.init_pair(28, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
-    curses.init_pair(29, curses.COLOR_YELLOW, curses.COLOR_BLUE)
-    curses.init_pair(30, curses.COLOR_YELLOW, curses.COLOR_MAGENTA)
-    curses.init_pair(31, curses.COLOR_YELLOW, curses.COLOR_CYAN)
-    curses.init_pair(32, curses.COLOR_YELLOW, curses.COLOR_WHITE)
-
-    curses.init_pair(33, curses.COLOR_BLUE, curses.COLOR_BLACK)
-    curses.init_pair(34, curses.COLOR_BLUE, curses.COLOR_RED)
-    curses.init_pair(35, curses.COLOR_BLUE, curses.COLOR_GREEN)
-    curses.init_pair(36, curses.COLOR_BLUE, curses.COLOR_YELLOW)
-    curses.init_pair(37, curses.COLOR_BLUE, curses.COLOR_BLUE)
-    curses.init_pair(38, curses.COLOR_BLUE, curses.COLOR_MAGENTA)
-    curses.init_pair(39, curses.COLOR_BLUE, curses.COLOR_CYAN)
-    curses.init_pair(40, curses.COLOR_BLUE, curses.COLOR_WHITE)
-
-    curses.init_pair(41, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
-    curses.init_pair(42, curses.COLOR_MAGENTA, curses.COLOR_RED)
-    curses.init_pair(43, curses.COLOR_MAGENTA, curses.COLOR_GREEN)
-    curses.init_pair(44, curses.COLOR_MAGENTA, curses.COLOR_YELLOW)
-    curses.init_pair(45, curses.COLOR_MAGENTA, curses.COLOR_BLUE)
-    curses.init_pair(46, curses.COLOR_MAGENTA, curses.COLOR_MAGENTA)
-    curses.init_pair(47, curses.COLOR_MAGENTA, curses.COLOR_CYAN)
-    curses.init_pair(48, curses.COLOR_MAGENTA, curses.COLOR_WHITE)
-
-    curses.init_pair(49, curses.COLOR_CYAN, curses.COLOR_BLACK)
-    curses.init_pair(50, curses.COLOR_CYAN, curses.COLOR_RED)
-    curses.init_pair(51, curses.COLOR_CYAN, curses.COLOR_GREEN)
-    curses.init_pair(52, curses.COLOR_CYAN, curses.COLOR_YELLOW)
-    curses.init_pair(53, curses.COLOR_CYAN, curses.COLOR_BLUE)
-    curses.init_pair(54, curses.COLOR_CYAN, curses.COLOR_MAGENTA)
-    curses.init_pair(55, curses.COLOR_CYAN, curses.COLOR_CYAN)
-    curses.init_pair(56, curses.COLOR_CYAN, curses.COLOR_WHITE)
-
-    curses.init_pair(57, curses.COLOR_WHITE, curses.COLOR_BLACK)
-    curses.init_pair(58, curses.COLOR_WHITE, curses.COLOR_RED)
-    curses.init_pair(59, curses.COLOR_WHITE, curses.COLOR_GREEN)
-    curses.init_pair(60, curses.COLOR_WHITE, curses.COLOR_YELLOW)
-    curses.init_pair(61, curses.COLOR_WHITE, curses.COLOR_BLUE)
-    curses.init_pair(62, curses.COLOR_WHITE, curses.COLOR_MAGENTA)
-    curses.init_pair(63, curses.COLOR_WHITE, curses.COLOR_CYAN)
-    curses.init_pair(64, curses.COLOR_WHITE, curses.COLOR_WHITE)
-
     cd = Color_decoder()
 
     ## flags
