@@ -86,7 +86,7 @@
         },
         {
             "id": "testing_law_auth_anarch",
-            "catagory": "ideology",
+            "catagory": "decisions",
             "subcatagory": "law",
             "name": "Authoritarianism vs Anarchism",
             "cost": {

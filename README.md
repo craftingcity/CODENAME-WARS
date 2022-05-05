@@ -34,16 +34,19 @@ Build with Curses, run under everything. Handle input via menu, impact gameboard
 ### Content
 Ideally, everything is somewhat connected; I like CDDA for that.
 
-PLAYER controls FACTION, DECISCION
-	DECISCION controls RESEARCH, CONSTRUCTION, IDEOLOGY, COMMAND
-	FACTION controls LAND, RESOURCE, TECH, IDEOLOGY, CITIZEN, MILITARY, ASSET
-		LAND
-			changable through CONSTRUCTION
+PLAYER controls FACTION, DECISION
+	DECISION controls RESEARCH, CONSTRUCTION, LAWS, COMMANDS
+	FACTION controls TERRAIN, RESOURCE, TECH, IDEOLOGY, CITIZEN, MILITARY, ASSET
+			has LAWS as IDEOLOGY
+		TERRAIN
+			has BUILDABLES
 		RESOURCE
-			used by CITIZEN, MILITARY, ASSET
+			used by ANY
 		TECH
-			required by CITIZEN, MILITARY, ASSET
-				NEOLITHIC
+			required by ANY
+			examples:
+				PREAGRARRIAN
+				POSTAGRARRIAN
 				PREINDUSTRIAL
 				INDUSTRIAL
 				POSTINDUSTRIAL
@@ -52,30 +55,25 @@ PLAYER controls FACTION, DECISCION
 				FANTASTIC
 			changable through RESEARCH
 		IDEOLOGY
-			used by CITIZEN, MILITARY, ASSET
+			used by CITIZEN, ASSET, REASEARCH
 			impacts MORALE
-			changable through DECISCION, TIME
 		CITIZEN
 			requires RESOURCE, ASSET
+			examples:
 				FOOD
 				WATER
 				HOUSING
-			has MORALE
-			impacted by IDEOLOGY
+			has MORALE, IDEOLOGY
 		MILITARY
-			controlled by COMMAND
-			requires RESOURCE, ASSET, TECH
+			controlled by COMMANDS
+			requires RESOURCE, ASSET, TECH, IDEOLOGY, CITIZEN
+			examples:
 				EQUIPMENT
-				BODIES
-				HOMEBASE
-				*
-			has SPEED, ATTACK, DEFENSE, STRATEGEY, PREPERATIONVSOPPOSED, MORALE
-			impacted by IDEOLOGY, CITIZEN
+				BODIES as CITIZEN and RESOURCE
+				TRAINING_CAMP
+				WARRIOR_TECH
+				RAIDER_IDEO
+			has SPEED, ATTACK, DEFENSE, STRATEGEY, PREPERATIONVSOPPOSED
 		ASSET
-			requires RESOURCE, TECH, LAND
-			has PRODUCTION, HOMEBASE, CONSTRUCTION, RESEARCH, *
-				PRODUCTION takes TIME
-				CONSTRUCTION takes TIME
-				RESEARCH takes TIME
-				* takes TIME
-			impacted by IDEOLOGY
+			requires RESOURCE, TECH, TERRAIN, IDEOLOGY
+			has ANY
