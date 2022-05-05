@@ -25,4 +25,4 @@ def alpha_two(stdscr):
 
 ## run correctly as standalone
 if __name__ == "__main__":
-    wrapper(alpha_one)
+    wrapper(alpha_two)
