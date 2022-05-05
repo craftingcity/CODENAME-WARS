@@ -61,12 +61,55 @@
             "description": "Science Points is a numerical representation of your scientific progression."
         },
         {
+            "id": "testing_resource",
+            "catagory": "resource",
+            "subcatagory": "testing",
+            "name": "Resource!",
+            "description": "Brains"
+        },
+        {
+            "id": "time_resource",
+            "catagory": "resource",
+            "subcatagory": "testing",
+            "name": "Time",
+            "description": "Time is a resource that is used by some units and assets to simulate things such as construction or training times"
+        },
+        {
             "id": "testing_technology_resource_production",
             "catagory": "technology",
             "subcatagory": "testing",
             "name": "Resource Production Technology",
             "description": "This is a testing tech that will allow you to build the required asset for 'testing_resource' extraction.",
-            "cost": 100
+            "cost": {
+                "science_points_resource": 1200
+            }
+        },
+        {
+            "id": "testing_law_auth_anarch",
+            "catagory": "ideology",
+            "subcatagory": "law",
+            "name": "Authoritarianism vs Anarchism",
+            "cost": {
+                "political_power_resource": 100
+            }
+        },
+        {
+            "id": "testing_citizen_anarch",
+            "catagory": "citizen",
+            "subcatagory": "test",
+            "name": "Anarch",
+            "ideals": {
+                "anarchy": 100
+            }
+        },
+        {
+            "id": "testing_citizen_auth",
+            "catagory": "citizen",
+            "subcatagory": "test",
+            "name": "Authoritarian",
+            "ideals": {
+                "authoritarianism": 100
+            }
         },
         {
             "id": "testing_military",
@@ -76,9 +119,10 @@
             "subcatagory": "unit",
             "name": "Testing Unit",
             "description": "This is a testing military unit.",
-            "training_cost": 10,
-            "bodies_cost": 10,
-            "equipment_cost": [],
+            "cost": {
+                "bodies_resource": 10,
+                "time_resource": 10
+            },
             "attack": 10,
             "defense": 5,
             "move_speed": 2,
@@ -100,8 +144,8 @@
             "colors": ["YELLOW", "BLACK"],
             "catagory": "asset",
             "subcatagory": "production",
-            "name": "Testing Production Building",
-            "description": "A testing building that produces a testing resource.",
+            "name": "Production Building",
+            "description": "A testing building that produces the fabled 'testing_resrouce'.",
             "cost": [],
             "required": ["testing_technology_resource_production"],
             "production": ["testing_resource", 1],
@@ -113,11 +157,11 @@
             "colors": ["WHITE", "BLACK"],
             "catagory": "asset",
             "subcatagory": "housing",
-            "name": "Testing Housing",
+            "name": "Instant Testing Housing",
             "description": "A testing housing.",
             "cost": [],
             "required": [],
-            "production": ["bodies_resource", 16],
+            "production": {"bodies_resource": 16},
             "prod_speed": 0
         },
         {
@@ -126,11 +170,11 @@
             "colors": ["GREEN", "BLACK"],
             "catagory": "asset",
             "subcatagory": "housing",
-            "name": "Testing Housing",
-            "description": "A testing housing.",
+            "name": "Passive Testing Housing",
+            "description": "B testing housing.",
             "cost": [],
             "required": [],
-            "production": ["bodies_resource", 0.4],
+            "production": {"bodies_resource": 0.4},
             "prod_speed": 1
         }
     ]

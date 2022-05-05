@@ -1,5 +1,5 @@
 {
-    "permanent": {
+    "meta_data": {
         "date_created": "5/4/2022",
         "date_started": "3/24/0103",
         "modlist": ["default_mod.json"],
@@ -9,23 +9,50 @@
     "current": {
         "factions": [
             {
-                "fac_name": "Joe's Raiders",
-                "current_leader": "Joe Shmo",
-                "current_laws": [],
-                "capital": "Joe's Place"
-            },
-            {
                 "fac_name": "Yummi's Fallen",
-                "current_leader": "Yummi Sakai",
                 "current_laws": [],
-                "capital": "Yummi's Place"
+                "researched": []
+
             }
         ],
-        "boardstate": {
-            "terrain": [],
-            "assets": [],
-            "citizens": [],
-            "units": [],
+        "gamestate": {
+            "terrain": {
+                "0": {
+                    "0": {"baseid":"testing_terrain"},
+                    "1": {"baseid":"testing_water"}
+                },
+                "1": {
+                    "0": {"baseid":"testing_resource_fields"},
+                    "1": {"baseid":"testing_terrain"}
+                }
+            },
+            "asset": {
+                "0": {
+                    "0": {"baseid":""},
+                    "1": {"baseid":""}
+                },
+                "1": {
+                    "0": {"baseid":""},
+                    "1": {"baseid":"testing_passive_housing"}
+                }
+            },
+            "unit": {
+                "0": {
+                    "0": {"baseid":""},
+                    "1": {"baseid":""}
+                },
+                "1": {
+                    "0": {"baseid":""},
+                    "1": {"baseid":""}
+                }
+            },
+            "citizen": [
+                {
+                    "baseid":"testing_citizen_anarch",
+                    "lives_at": [1, 1],
+                    "works_at": "None"
+                }
+            ]
 
         }
     }

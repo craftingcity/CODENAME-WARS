@@ -4,7 +4,7 @@
 import curses
 from curses import wrapper
 from ians_toolkit import *
-from brocks_toolkit import Color_decoder
+from brocks_toolkit import *
 import json
 import time
 
@@ -17,67 +17,6 @@ import time
 ## - [ ] Impliment basic UI
 ## - [x] Integrate color
 
-## This is the World class. It inherits from FileWriter.
-## Its been slightly modified to write some data to a file
-## on initialization, but only if that file is empty.
-## Which means World will recognize it's work (or anyone else's as something that exists).
-## So: (Ideally, in the end,) it will one-time write a branch of metadata
-## and then never touch it again, editing only the "play" data.
-## Pretty sick right?!
-
-class World(FileWriter):
-    ## Instance variables
-    def __init__(self, f):
-        FileWriter.__init__(self, f)
-        ## check if this world has data
-        try:
-            open_file = open(self.f, "r")
-        except FileNotFoundError:
-            open_file = open(self.f, "x")
-            open_file = open(self.f, "r")
-        file_data = open_file.read()
-        if file_data == "":
-            self.write("World Instanced\n")
-        else:
-            self.append("World Loaded\n")
-        open_file.close()
-    
-    def save(self):
-        current_time = time.localtime()
-        self.append(f"World Saved at {current_time}\n")
-        
-
-## Here we create multiple classes who all play a large part in organizing
-## the systems on-stage and behind-the-scenes
-## (ie, frontend and backend :) )
-
-class VisualCell(Cell):
-     ## Instance variables
-    def __init__(self, y_pos, x_pos, data):
-        Cell.__init__(self, y_pos, x_pos, data)
-        self.name = self.data["name"]
-        self.representation = self.data["representation"]
-        self.colors = self.data["colors"]
-    
-    ## Methods for returning visual data
-    def get_name(self):
-        return self.name
-    
-    def get_rep(self):
-        return self.representation
-
-    def get_colors(self):
-        return self.colors
-
-class Terrain(VisualCell):
-    ## Instance variables
-    def __init__(self, y_pos, x_pos, data):
-        VisualCell.__init__(self, y_pos, x_pos, data)
-    
-class Unit(VisualCell):
-    ## Instance variables
-    def __init__(self, y_pos, x_pos, data):
-        VisualCell.__init__(self, y_pos, x_pos, data)
 
 
 def alpha_one(stdscr):

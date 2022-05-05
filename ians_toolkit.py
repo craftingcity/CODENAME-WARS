@@ -75,6 +75,45 @@ class Logger(FileWriter):
     def log(self, message, level=10):
         self.append(f"{level}:{message}\n")
 
+class World(FileWriter):
+    ## Instance variables
+    def __init__(self, f):
+        FileWriter.__init__(self, f)
+        self.f = f
+        ## if the file exsists, read it, otherwise create it and read it
+        try:
+            open_file = open(self.f, "r")
+        except FileNotFoundError:
+            open_file = open(self.f, "x")
+            open_file = open(self.f, "r")
+        ## World reads json data from the passed file
+        self.mass_data = json.load(open_file)
+        ## stop looking at file
+        open_file.close()
+    
+    def save(self):
+        ## dump makes sure to pass a string to write
+        self.write(json.dumps(self.mass_data))
+
+    def get_terrain_at(self, y, x):
+        return self.mass_data["current"]["gamestate"]["terrain"][y][x]
+
+    def get_asset_at(self, y, x):
+        return self.mass_data["current"]["gamestate"]["asset"][y][x]
+
+    def get_unit_at(self, y, x):
+        return self.mass_data["current"]["gamestate"]["unit"][y][x]
+
+    def set_terrain_at(self, y, x, id):
+        self.mass_data["current"]["gamestate"]["terrain"][y][x]["baseid"] = id
+
+    def set_asset_at(self, y, x):
+        return self.mass_data["current"]["gamestate"]["asset"][y][x]
+
+    def set_unit_at(self, y, x):
+        return self.mass_data["current"]["gamestate"]["unit"][y][x]
+    
+
 ## Cell is a class of definitions and variables used to represent "a board unit"
 ## If one does not pass it data, it could be used as a coordinate object, but so can a tuple, or a two-item list
 class Cell:
@@ -99,6 +138,34 @@ class Cell:
         self.x_pos = self.x_pos + 1
     def move_west(self):
         self.x_pos = self.x_pos - 1
+
+class VisualCell(Cell):
+     ## Instance variables
+    def __init__(self, y_pos, x_pos, data):
+        Cell.__init__(self, y_pos, x_pos, data)
+        self.name = self.data["name"]
+        self.representation = self.data["representation"]
+        self.colors = self.data["colors"]
+    
+    ## Methods for returning visual data
+    def get_name(self):
+        return self.name
+    
+    def get_rep(self):
+        return self.representation
+
+    def get_colors(self):
+        return self.colors
+
+class Terrain(VisualCell):
+    ## Instance variables
+    def __init__(self, y_pos, x_pos, data):
+        VisualCell.__init__(self, y_pos, x_pos, data)
+    
+class Unit(VisualCell):
+    ## Instance variables
+    def __init__(self, y_pos, x_pos, data):
+        VisualCell.__init__(self, y_pos, x_pos, data)
 
 ## Box is a class that represents two sets of coordinates
 ## I use this to represent pads and windows and such easily
