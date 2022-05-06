@@ -2,16 +2,24 @@
     "meta_data": {
         "date_created": "5/4/2022",
         "date_started": "3/24/0103",
+        "game_name": "example_world",
         "modlist": ["default_mod.json"],
         "mode": "single",
-        "num_players": 1
+        "num_players": 1,
+        "world_height": 2,
+        "world_width": 2
     },
     "current": {
         "factions": [
             {
                 "fac_name": "Yummi's Fallen",
                 "current_laws": [],
-                "researched": []
+                "researched": [],
+                "stats": {
+                    "total_pop": 0,
+                    "total_pp": 0,
+                    "total_resource": 0
+                }
 
             }
         ],

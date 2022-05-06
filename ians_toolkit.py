@@ -73,7 +73,7 @@ class Logger(FileWriter):
         FileWriter.__init__(self, w)
 
     def log(self, message, level=10):
-        self.append(f"{level}:{message}\n")
+        self.append(f"{level}: {message}\n")
 
 class World(FileWriter):
     ## Instance variables
@@ -95,6 +95,9 @@ class World(FileWriter):
         ## dump makes sure to pass a string to write
         self.write(json.dumps(self.mass_data))
 
+    ## Current data interactions
+    ### Getting
+
     def get_terrain_at(self, y, x):
         return self.mass_data["current"]["gamestate"]["terrain"][y][x]
 
@@ -104,15 +107,37 @@ class World(FileWriter):
     def get_unit_at(self, y, x):
         return self.mass_data["current"]["gamestate"]["unit"][y][x]
 
+    def get_stats_for(self, faction="Yummi's Fallen"):
+        return self.mass_data["current"]["factions"][faction]["stats"]
+
+    ### Setting
+
     def set_terrain_at(self, y, x, id):
         self.mass_data["current"]["gamestate"]["terrain"][y][x]["baseid"] = id
 
     def set_asset_at(self, y, x):
-        return self.mass_data["current"]["gamestate"]["asset"][y][x]
+        self.mass_data["current"]["gamestate"]["asset"][y][x]["baseid"] = id
 
     def set_unit_at(self, y, x):
-        return self.mass_data["current"]["gamestate"]["unit"][y][x]
-    
+        self.mass_data["current"]["gamestate"]["unit"][y][x]["baseid"] = id
+
+    ## Meta data interactions
+    ### Getting
+
+    def get_name(self):
+        return self.mass_data["meta_data"]["game_name"]
+
+    def get_mode(self):
+        return self.mass_data["meta_data"]["mode"]
+
+    def get_num_players(self):
+        return self.mass_data["meta_data"]["num_players"]
+
+    def get_world_height(self):
+        return self.mass_data["meta_data"]["world_height"]
+
+    def get_world_width(self):
+        return self.mass_data["meta_data"]["world_height"]
 
 ## Cell is a class of definitions and variables used to represent "a board unit"
 ## If one does not pass it data, it could be used as a coordinate object, but so can a tuple, or a two-item list
@@ -227,7 +252,7 @@ class Flag:
 ## do some fancy schmancy on the current selection if you dont hate your user (or don't if you do)
 class Menu:
     ## Instance variables
-    def __init__(self, options, current_selection=0):
+    def __init__(self, options="None", current_selection=0):
         self.options = options
         self.current_selection = current_selection
     

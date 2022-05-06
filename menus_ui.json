@@ -1,11 +1,11 @@
 {
     "main": ["Continue", "New", "Load", "Options", "Exit"],
-    "ingame": ["Decisions", "Research", "Citizenry", "Military", "Assets", "Markings"],
+    "ingame": ["Decisions", "Research", "Citizenry", "Military", "Assets", "Markings", "Exit to Menu", "Exit to Desktop"],
     "terrain": ["Construct", "Call Unit", "Mark As"],
     "resource": ["Show Producers", "Show Consumers"],
     "technology": ["Research", "Show Prerequisites", "Show Requisites"],
     "decisions": ["Choose Anarchy", "Choose Authoritarianism"],
     "citizen": ["Display Ideology", "Create Child", "Show Parent", "Show Children"],
-    "unit": ["Move", "Attack", "Support", "Strategy", "Powers"],
+    "unit": ["Move", "Attack", "Support", "Strategy", "Special"],
     "asset": ["Access"]
 }
