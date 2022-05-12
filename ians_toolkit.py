@@ -50,6 +50,33 @@ class FileReader:
     def grab(self, id):
         return self.final[id]
 
+class SingleReader:
+    def __init__(self, r):
+        self.r = r
+        self.holding = []
+        self.final = {}
+
+        ## read r into holding as json data
+        ## correctly interpret single string file-names and lists of string file-names
+        if type(r) is list:
+            for item in r:
+                open_file = open(item, "r")
+                self.holding.append(json.load(open_file))
+                open_file.close()
+        if type(r) is str:
+            open_file = open(r, "r")
+            self.holding.append(json.load(open_file))
+            open_file.close()
+
+        ## examine contents of holding to one level
+
+        for data in self.holding:
+            self.final.update({data:self.holding[data]})
+
+    def get(self, name):
+        return self.final[name]
+
+
 ## Meet FileWriter! She only takes a filename, 
 ## but she'll mark down exactly what you what how you want it!
 class FileWriter:
@@ -243,6 +270,24 @@ class Flag:
     ## Mehtod for getting the flag
     def get(self):
         return self.var
+
+class ComplexFlag:
+    ## Instance variables
+    def __init__(self):
+        self.container = {}
+
+    ## Method for setting any given name as the given val
+    def set(self, name, val):
+        self.container.update({name:val})
+
+    ## Method for getting any given flag
+    def get(self, name):
+        return self.container[name]
+
+    ## Method for flopping any given flag
+    def flop(self, name):
+        flipper = not self.get(name)
+        self.set(self, flipper)
 
 ## Menu is a class of variables and definitions used to represent a system
 ## This system, typically, is a menu

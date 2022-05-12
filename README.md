@@ -6,11 +6,9 @@ Written in Python, using Curses (https://docs.python.org/3/library/curses.html) 
 
 1. First and foremost, I need to relearn the tools. Its been a while since I've worked in Python, and I've never used JSON, but I think I understand it to a degree.
 2. Secondarily, I need to build the engine before the content. Clearly I'm going to need some basic content to test my engine, but thats not what I mean.
+	2a. Cursor
+	2b. Hotkeys
 3. Finally, after building the engine, I can build the content of the game. Unit and Building types, Reasearch, goodies galore.
-
-- cursor is going to need (right now) a int to look at the world list
-- cursor can get an int from y x coords by checking the difference between it and another relative point (a pad's top left corner, for example / exactly)
-- then cursor tells lookup, lookup tells screenwrite
 
 ### The Big Four
 On the right of the screen, a log and psuedo-topbar-thing with constantly relevant or changing information, on the left, the Gameboard. Appearing only when needed, a contextual Menu that layers and displays relevent information. I call these the big three. I bring the concept from Dwarf Fortress and CDDA, although I'm sure many other games have used it.

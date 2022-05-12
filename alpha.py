@@ -35,7 +35,7 @@ def alpha_two(stdscr):
     logger = Logger("alpha_two.log")
     logger.log("Logger Initilized", 0)
 
-    ## grab our variables - log 1
+    ## grab our variables and constants - log 1
     ### screen size
     TERM_Tup = update_term_size(stdscr, logger)
     TERM_h = TERM_Tup[0]
@@ -44,11 +44,36 @@ def alpha_two(stdscr):
     ### world name
     world_name = return_world_file_name()
     logger.log(f"World Name fetched as {world_name}", 1)
-    
-    ## initilize "large" / "global" flags
 
-    main_menu_FLAG = Flag(True)
-    reactive_menu_FLAG = Flag(False)
+    ### ui options
+    ui_options = SingleReader("menus_ui.json")
+    main_menu_UI = ui_options["main"]
+    ingame_menu_UI = ui_options["ingame"]
+    terrain_UI = ui_options["terrain"]
+    resource_UI = ui_options["resource"]
+    technology_UI = ui_options["technology"]
+    decisions_UI = ui_options["decisions"]
+    citizen_UI = ui_options["citizen"]
+    unit_UI = ui_options["unit"]
+    asset_UI = ui_options["asset"]
+
+    
+    ## initilize flags - log 1
+    logger.log("Building Flags")
+
+    system_CF = ComplexFlag()
+    system_CF.set("hotkey_override", True)
+    system_CF.set("in_left_menu", True)
+    system_CF.set("left_menu_is_main", True)
+    system_CF.set("left_menu_is_ingame", False)
+    system_CF.set("in_right_menu", False)
+    system_CF.set("")
+
+
+    logger.log("...Done")
+
+
+
 
 
     ## data initilization - log 1
@@ -177,35 +202,60 @@ def alpha_two(stdscr):
     logger.log("Entering Loop", 3)
     current_key = "None"
     while True:
-        ### handle input - log 4
+        ## The input handler, after regestering the emergency exit, looks first the flag that declares whether or not
+        ## the player is interacting with a system that allows hotkey overriding, such as the two display menus. 
+        ## From there, the tree splits again into each individual system's system of input. 
+        ## One day -  ie next version - this looks like a bunch of functions that are simply
+        ## called when checks are passed. 
+
+        ## handle input - log 4
+
+        ### grab current key
         logger.log("*Begin input handling*", 4)
         current_key = stdscr.getkey()
-        logger.log(f"*Grabbed current_key as {current_key} *")
-        #### emergency exit
+        logger.log(f"*Grabbed current_key as {current_key} *", 4)
+
+        ### check emergency exit - log 100
         if current_key == "q":
-            logger.log("*Emergency Exit input called*", 4)
+            logger.log("*Emergency Exit input called*", 100)
             break
-
-        #### when in the main menu
-        if main_menu_FLAG:
-            if pre_game_FLAG:
-                pass
-            if in_game_FLAG:
-                pass
-
-        #### when in the reactive menu
-        if reactive_menu_FLAG:
+        
+        ### begin complex flag check structure
+        logger.log("*Checking Flags*", 41)
+        if system_CF.get("hotkey_override"):
+            ## it is correct to have up and down unintuitivly call minus and plus respectivly for both big menus
+            if system_CF.get("in_left_menu"):
+                if system_CF.get("left_menu_is_main"):
+                    perma_Menu.set_options(main_menu_UI)
+                if system_CF.get("left_menu_is_ingame"):
+                    perma_Menu.set_options(ingame_menu_UI)
+                if current_key == "KEY_UP":
+                    perma_Menu.minus()
+                if current_key == "KEY_DOWN":
+                    perma_Menu.plus()
+                if current_key == ("KEY_RIGHT" or "KEY_LEFT"):
+                    system_CF.flop("in_left_menu")
+                    system_CF.flop("in_right_menu")
+            if system_CF.get("in_right_menu"):
+                if current_key == "KEY_UP":
+                    reactive_Menu.minus()
+                if current_key == "KEY_DOWN":
+                    reactive_Menu.plus()
+                if current_key == ("KEY_RIGHT" or "KEY_LEFT"):
+                    system_CF.flop("in_left_menu")
+                    system_CF.flop("in_right_menu")
+        else:
             pass
             
-        ####
+        ## adjust values for process - log 5
 
-        ### adjust values for process - log 5
+        
 
 
-        ### display buffer - log 6
-        #### refresh pads
-        #### refresh windows
-        #### refresh stdscr
+        ## display buffer - log 6
+        ### refresh pads
+        ### refresh windows
+        ### refresh stdscr
 
     
     ## end of the line - log 100
