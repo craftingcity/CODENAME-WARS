@@ -47,16 +47,24 @@ def alpha_two(stdscr):
     
     ## initilize "large" / "global" flags
 
+    main_menu_FLAG = Flag(True)
+    reactive_menu_FLAG = Flag(False)
+
 
     ## data initilization - log 1
     ### main structure is World
 
     world = World(world_name)
+    world_h = world.get_world_height()
+    world_w = world.get_world_width()
+    world_mode = world.get_mode()
+    world_num_players = world.get_num_players()
+
     logger.log(f"World Initilizing from {world_name}...", 1)
-    logger.log(f"... Mode: {world.get_mode()}")
-    logger.log(f"... numPlayers: {world.get_num_players()}")
-    logger.log(f"... Height: {world.get_world_height()}")
-    logger.log(f"... Width: {world.get_world_width()}")
+    logger.log(f"... Mode: {world_mode}")
+    logger.log(f"... numPlayers: {world_num_players}")
+    logger.log(f"... Height: {world_h}")
+    logger.log(f"... Width: {world_w}")
     logger.log("...Done")
 
     ### initilize perma_menu
@@ -93,7 +101,7 @@ def alpha_two(stdscr):
     ### initilize map
     logger.log("Building Map...", 1)
 
-    map  = curses.newpad()
+    map  = curses.newpad(world_h, world_w)
 
     logger.log("...Done")
 
@@ -125,6 +133,8 @@ def alpha_two(stdscr):
     reactive_menu_Box = Box(pmBy, pmBx + 1, TERM_h - 1, TER_w - 1)
 
     logger.log("...RMenu Done")
+
+    cursor_Box = Box(mBy, mBx, mBy, mBx)
 
     ## initilize curses objects - log 2
     ### create 5 windows
@@ -170,12 +180,27 @@ def alpha_two(stdscr):
         ### handle input - log 4
         logger.log("*Begin input handling*", 4)
         current_key = stdscr.getkey()
-        logger.log(f"*Grabbed current_key as {current_key}*")
+        logger.log(f"*Grabbed current_key as {current_key} *")
+        #### emergency exit
         if current_key == "q":
             logger.log("*Emergency Exit input called*", 4)
             break
 
+        #### when in the main menu
+        if main_menu_FLAG:
+            if pre_game_FLAG:
+                pass
+            if in_game_FLAG:
+                pass
+
+        #### when in the reactive menu
+        if reactive_menu_FLAG:
+            pass
+            
+        ####
+
         ### adjust values for process - log 5
+
 
         ### display buffer - log 6
         #### refresh pads
