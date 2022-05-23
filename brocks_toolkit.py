@@ -1,6 +1,30 @@
 import curses
 from curses import wrapper
 
+class Map_tile:
+    def __init__(self):
+        self.terrain = "default"
+        self.improvement = "none"
+        self.pawn = "none"
+
+    def get_terrain(self):
+        return self.terrain
+
+    def get_improvement(self):
+        return self.improvement
+
+    def get_pawn(self):
+        return self.pawn
+
+    def set_terrain(self, new_terrain):
+        self.terrain = new_terrain
+
+    def set_improvement(self, new_improvement):
+        self.improvement = new_improvement
+    
+    def set_pawn(self, new_pawn):
+        self.pawn = new_pawn
+
 
 # Curses colors are: 0:black, 1:red, 2:green, 3:yellow, 4:blue, 5:magenta, 6:cyan, and 7:white
 class Color_decoder:
