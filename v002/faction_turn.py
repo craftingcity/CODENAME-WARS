@@ -42,6 +42,9 @@ class FileInterpreter:
     def append(self, input):
         self.FileContents.append(input)
 
+    def lookup(self, input):
+        return self.FileContents[input]
+
     def save(self):
         try:
             opened_FileName = open(self.FileName, "w")
@@ -51,8 +54,9 @@ class FileInterpreter:
             print("File not found; execution failed. Please retry.")
 
 # EXAMINATION: Logger
-# See FileInterpreter...
 # Logger is built to create a file that is human-readable for debugging and "process examination".
+# See FileInterpreter...
+# Logger.log() is a preset str() that marks it's readable contents with a numerical value.
 class Logger(FileInterpreter):
     def __init__(self, FileName):
         try:
@@ -64,28 +68,36 @@ class Logger(FileInterpreter):
         self.append(f"{LogLevel}: {LogMessage}\n")
 
 # EXAMINTION: FacGoalObject
-#
+# Initialization takes a FactionObject as it's owner and a GoalID to FileInterpreter.lookup().
+# FacGoalObject.setID() will take a new ID, reset the current GoalProgress, and set the new GoalMaxProgress.
+# FacGoalObject.increment() will 
 class FacGoalObject:
     # Initialize object variables...
-    def __init__(self, GoalID):
+    def __init__(self, OwnerFac, GoalID):
+        self.OwnerFac = OwnerFac
         self.GoalID = GoalID
+        self.GoalPreset = FileInterpreter.lookup(GoalID)
         self.GoalProgress = 0
+        self.GoalMaxProgress = self.GoalPreset["MaxProgress"]
 
     def setID(self, newID):
         self.GoalID = newID
-        self.GoalProgressMax = 
+        self.GoalPreset = FileInterpreter.lookup(newID)
+        self.GoalProgress = 0
+        self.GoalMaxProgress = self.GoalPreset["MaxProgress"]
 
     def increment(self):
         self.GoalProgress += 1
         if self.GoalProgress == self.GoalMaxProgress:
             self.setID(input("Please enter a new GoalID."))
-        self.GoalProgress = 0
+            pass # send experience to owner
+                 # exception for "Expand Influence" to gain 1 or 2 xp
 
 # EXAMINTION: FacTagObject
 #
 class FacTagObject:
     # Initialize object variables...
-    def __init__(self):
+    def __init__(self, OwnerFac, TagID):
         pass
 
 # EXAMINTION: FactionObject
