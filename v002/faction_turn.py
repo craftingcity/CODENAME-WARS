@@ -68,21 +68,23 @@ class Logger(FileInterpreter):
         self.append(f"{LogLevel}: {LogMessage}\n")
 
 # EXAMINTION: FacGoalObject
-# Initialization takes a FactionObject as it's owner and a GoalID to FileInterpreter.lookup().
+# Initializaion will take two str()s; an OwnerFac for reference and a GoalID to FileInterpreter.lookup().
 # FacGoalObject.setID() will take a new ID, reset the current GoalProgress, and set the new GoalMaxProgress.
-# FacGoalObject.increment() will 
+# FacGoalObject.increment() will increase GoalProgress and compare it to the GoalMaxProgress, requesting a new GoalID if the two are equal.
+#   - should be greater than or equal to
 class FacGoalObject:
     # Initialize object variables...
     def __init__(self, OwnerFac, GoalID):
+        self.GoalData = FileInterpreter("goals.json")
         self.OwnerFac = OwnerFac
         self.GoalID = GoalID
-        self.GoalPreset = FileInterpreter.lookup(GoalID)
+        self.GoalPreset = self.GoalData.lookup(GoalID)
         self.GoalProgress = 0
         self.GoalMaxProgress = self.GoalPreset["MaxProgress"]
 
     def setID(self, newID):
         self.GoalID = newID
-        self.GoalPreset = FileInterpreter.lookup(newID)
+        self.GoalPreset = self.GoalData.lookup(newID)
         self.GoalProgress = 0
         self.GoalMaxProgress = self.GoalPreset["MaxProgress"]
 
@@ -94,17 +96,23 @@ class FacGoalObject:
                  # exception for "Expand Influence" to gain 1 or 2 xp
 
 # EXAMINTION: FacTagObject
-#
+# Initializaion will take two str()s; an OwnerFac for reference and a TagID to FileInterpreter.lookup().
 class FacTagObject:
     # Initialize object variables...
     def __init__(self, OwnerFac, TagID):
+        self.TagData = FileInterpreter("tags.json")
+        self.OwnerFac = OwnerFac
+        self.TagID = TagID
+        self.TagEffect = self.TagData.lookup(TagID)
         pass
 
 # EXAMINTION: FactionObject
-#
+# Initializaion will take many simple int()s as it's numerical stats.
+# FactionObject.setGoal will take a str() and create this FactionObject's FacGoalObject.
+# FactionObject.setTag will take a str() and create this FactionObject's FacTagObject.
 class FactionObject:
     # Initialize object variables...
-    def __init__(self, FacID, ForceStat, CunningStat, WealthStat, CurrentExperience, CurrentTreasure, MaximumHealth, FacGoal, FacTag):
+    def __init__(self, FacID, ForceStat, CunningStat, WealthStat, CurrentExperience, CurrentTreasure, MaximumHealth):
         self.FacID = FacID              # The faction's identifier / name as a str()
         self.ForceStat = ForceStat      # The faction's Force stat as an int()
         self.CunningStat = CunningStat  # The faction's Cunning stat as an int()
@@ -113,6 +121,14 @@ class FactionObject:
         self.CurrentTreasure = CurrentTreasure      # The faction's current Treasure (to be spent to gain / manipulate Assets) as an int()
         self.CurrentHealth = MaximumHealth      # The faction's current Health as an int()
         self.MaximumHealth = MaximumHealth      # The faction's maximum Health as an int()
-        self.FacGoal = FacGoal          # The faction's current Goal as a FacGoalObject()
-        self.FacTag = FacTag            # The faction's current Tag as a FacTagObject()
-        return self.FacID
+
+    # Data Interactions...
+    ### Setters
+    def setGoal(self, GoalID):
+        self.FacGoal = FacGoalObject(self.FacID, GoalID)
+        return 
+    
+    def setTag(self, TagID):
+        self.FacTag = FacGoalObject(self.FacID, TagID)
+        return 
+        
