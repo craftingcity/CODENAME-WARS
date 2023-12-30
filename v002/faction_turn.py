@@ -11,6 +11,8 @@
 ###     - handle Location
 ###     - handle ActivatedAbility
 
+import json
+
 # EXAMINATION: FileInterpreter
 # FileInterpreter is built to handle - ideally - both the reading and writing of a JSON file.
 # Initializaion will take a FileName in both str() and list() and copy it's contents into FileContents
@@ -34,7 +36,6 @@ class FileInterpreter:
                 opened_FileName = open(self.FileName, "r")
                 self.FileContents.append(json.load(opened_FileName))
                 opened_FileName.close()
-            pass
         except FileNotFoundError:
             print("File not found; execution failed. Please retry.")
     
@@ -44,7 +45,7 @@ class FileInterpreter:
     def save(self):
         try:
             opened_FileName = open(self.FileName, "w")
-            opened_FileName.write(self.FileContents)
+            opened_FileName.write(json.dump(self.FileContents))     # json.dump() passes a str() for proper writing
             opened_FileName.close()
         except FileNotFoundError:
             print("File not found; execution failed. Please retry.")
@@ -66,10 +67,19 @@ class Logger(FileInterpreter):
 #
 class FacGoalObject:
     # Initialize object variables...
-    def __init__(self, GoalID, GoalProgress, GoalMaxProgress):
+    def __init__(self, GoalID):
         self.GoalID = GoalID
-        self.GoalProgress = GoalProgress
-        self.GoalMaxProgress = GoalMaxProgress
+        self.GoalProgress = 0
+
+    def setID(self, newID):
+        self.GoalID = newID
+        self.GoalProgressMax = 
+
+    def increment(self):
+        self.GoalProgress += 1
+        if self.GoalProgress == self.GoalMaxProgress:
+            self.setID(input("Please enter a new GoalID."))
+        self.GoalProgress = 0
 
 # EXAMINTION: FacTagObject
 #
