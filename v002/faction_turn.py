@@ -106,6 +106,33 @@ class FacTagObject:
         self.TagEffect = self.TagData.lookup(TagID)
         pass
 
+# EXAMINATION: FacAsset
+# Initialization 
+class FacAsset:
+    # Initialize object variables...
+    def __init__(self, OwnerFac, AssetID):
+        # metadata interactions
+        self.OwnerFac = OwnerFac
+        self.AssetID = AssetID
+        self.AssetData = FileInterpreter("assets.json")
+        self.AssetData = self.AssetData.lookup(self.AssetID)
+        # stat-data interations
+        ## health
+        self.AssetMaxHealth = self.AssetData["MaxHealth"]
+        self.AssetCurrentHealth = self.AssetMaxHealth
+        ## purchase requirements
+        self.AssetStatType = self.AssetData["AssetType"]
+        self.AssetStatRequirement = self.AssetData["AssetLevel"]
+        self.AssetCost = self.AssetData["TreasureCost"]
+        ## attack & counterattack
+        self.AssetAttackAs = self.AssetData["AttackAs"]
+        self.AssetAttackVs = self.AssetData["AttackVs"]
+        self.AssetMinimumAttack = self.AssetData["MinAttack"]
+        self.AssetMaximumAttack = self.AssetData["MaxAttack"]
+        self.AssetMinimumCounter = self.AssetData["MinCounter"]
+        self.AssetMaximumCounter = self.AssetData["MaxCounter"]
+        pass
+
 # EXAMINTION: FactionObject
 # Initializaion will take many simple int()s as it's numerical stats.
 # FactionObject.setGoal will take a str() and create this FactionObject's FacGoalObject.
@@ -121,14 +148,48 @@ class FactionObject:
         self.CurrentTreasure = CurrentTreasure      # The faction's current Treasure (to be spent to gain / manipulate Assets) as an int()
         self.CurrentHealth = MaximumHealth      # The faction's current Health as an int()
         self.MaximumHealth = MaximumHealth      # The faction's maximum Health as an int()
+        pass
 
     # Data Interactions...
-    ### Setters
+    ### Stats setters
+    def setForceStat(self, n):
+        self.ForceStat = n
+        return
+    
+    def setCunningStat(self, n):
+        self.CunningStat = n
+        return
+
+    def setWealthStat(self, n):
+        self.WealthStat = n
+        return
+
+    def setExperience(self, n):
+        self.CurrentExperience = n
+        return
+    
+    def setTreasure(self, n):
+        self.CurrentTreasure = n
+        return
+    
+    def setCurrentHealth(self, n):
+        self.CurrentHealth = n
+        return
+    
+    def setMaximumHealth(self, n):
+        self.MaximumHealth = n
+        return
+
+    ### Complex Object setters
     def setGoal(self, GoalID):
         self.FacGoal = FacGoalObject(self.FacID, GoalID)
         return 
     
     def setTag(self, TagID):
-        self.FacTag = FacGoalObject(self.FacID, TagID)
+        self.FacTag = FacTagObject(self.FacID, TagID)
         return 
-        
+    
+    # Asset Interactions...
+    ### CreateAsset will spawn an AssetObject
+    def CreateAsset(self, ):
+        pass
