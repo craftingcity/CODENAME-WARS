@@ -12,6 +12,7 @@
 ###     - handle ActivatedAbility
 
 import json
+import math
 
 # EXAMINATION: FileInterpreter
 # FileInterpreter is built to handle - ideally - both the reading and writing of a JSON file.
@@ -133,6 +134,29 @@ class FacAsset:
         self.AssetMaximumCounter = self.AssetData["MaxCounter"]
         pass
 
+    # Data Interactions...
+    ## Metadata setters
+
+    def setOwnerFac(self, newOwner):
+        self.OwnerFac = newOwner
+        pass
+
+    def setAssetID(self, newAsset):         # likely will not be used and will *most likely cause major issues* if implemented improporly
+        self.AssetID = newAsset
+        pass
+
+    ## Stat-data setters
+
+    def setMaxHP(self, n):
+        self.AssetMaxHealth = n
+        pass
+
+    def setCurHP(self, n):
+        self.AssetCurrentHealth = n
+        pass
+
+    # Intra Asset Handling
+
 # EXAMINTION: FactionObject
 # Initializaion will take many simple int()s as it's numerical stats.
 # FactionObject.setGoal will take a str() and create this FactionObject's FacGoalObject.
@@ -148,6 +172,7 @@ class FactionObject:
         self.CurrentTreasure = CurrentTreasure      # The faction's current Treasure (to be spent to gain / manipulate Assets) as an int()
         self.CurrentHealth = MaximumHealth      # The faction's current Health as an int()
         self.MaximumHealth = MaximumHealth      # The faction's maximum Health as an int()
+        self.OwnedAssets = []
         pass
 
     # Data Interactions...
@@ -190,6 +215,8 @@ class FactionObject:
         return 
     
     # Asset Interactions...
-    ### CreateAsset will spawn an AssetObject
-    def CreateAsset(self, ):
+    ### CreateAsset will .append() an AssetObject into the FactionObject's OwnedObjects list().
+    def CreateAsset(self, AssetID):
+        self.AssetToCreate = FacAsset(self, AssetID)
+        self.OwnedAssets.append(self.AssetToCreate)
         pass
