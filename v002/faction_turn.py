@@ -294,15 +294,18 @@ class FactionObject:
 
         return ListOfLegalAssets                # send back good assets
     
-    ## presentLegalPurchases() prints a good list of options, then calls executePurchase()
+    ### presentLegalPurchases() prints a good list of options, then calls executePurchase()
     def presentLegalPurchases(self, ListOfLegalAssets):
         purchaseMenu = MenuHandler(ListOfLegalAssets)       # create a MenuHandler object with the legal assets
         selectedOption = input(purchaseMenu.examineContents())  # get input
         return purchaseMenu.lookup(selectedOption)          # handle input and send back selected asset  
         
-    ## executePurchase() handles subtracting treasure and creating and adding AssetObjects
+    ### executePurchase() handles subtracting treasure and creating and adding AssetObjects
     def executePurchase(self, OptionToPurchase):
         AssetToPurchase = self.AssetsFile.lookup(str(OptionToPurchase))     # gather asset data structure
-        PurchasedAsset = FacAsset(self, AssetToPurchase["AssetID"])
-        self.OwnedAssets.append(PurchasedAsset)
+        PurchasedAsset = FacAsset(self, AssetToPurchase["AssetID"])         # create a FacAsset owned by this FacObject
+        self.OwnedAssets.append(PurchasedAsset)                         # append the new asset to the FacObject.OwnedAssets list
         pass
+
+    
+
