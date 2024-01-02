@@ -69,9 +69,23 @@ class Logger(FileInterpreter):
     def log(self, LogMessage, LogLevel=10):
         self.append(f"{LogLevel}: {LogMessage}\n")
 
+# EXAMINATION: MenuHandler()
+# MenuHandler is built to build an array of options and keys, and options to manipulate and examine them
+
 class MenuHandler():
-    def __init__(self):
+    def __init__(self, optionList):
+        self.menuContents = {}
+        self.iterableSymbol = "a"
+        for item in optionList:
+            self.menuContents.append(f"{self.iterableSymbol}:{item}")
+            self.iterableSymbol += 1
         pass
+
+    def examineContents(self):
+        return self.menuContents
+    
+    def lookup(self, symbolToLookup):
+        return self.menuContents[str(symbolToLookup)]
 
 # EXAMINTION: FacGoalObject
 # Initializaion will take two str()s; an OwnerFac for reference and a GoalID to FileInterpreter.lookup().
@@ -246,8 +260,6 @@ class FactionObject:
     def tellMaximumHealth(self):
         return self.MaximumHealth
     
-    def tell
-
     def lookupStat(self, StatToLookup):
         if StatToLookup == "Force":
             return self.ForceStat
@@ -279,21 +291,18 @@ class FactionObject:
                 ListOfLegalAssets.append(item)                  # add to list
             else:
                 pass
+
         return ListOfLegalAssets                # send back good assets
-
-    ######## BASE AS MENU SYSTEM
-    def presentLegalPurchases(self):
-        menuLetter = "a"                # symbol to display iterated "menu" choices
-        returnLetter = "z"              # symbol to move backwords in the "menu" system
-        encodedPurchaseArray = {}       # array to hold (symbol / assetid) pairs
-        for item in self.findLegalPurchases():
-            ItemAssetName = item["AssetName"]
-            ItemAssetCost = item["AssetCost"]
-            print(f"{menuLetter} - {ItemAssetName} - {ItemAssetCost} T.\n")     #### currently displays "base cost", instead display true cost after effects
-            encodedPurchaseArray.append(f"[{menuLetter}:{item}],")
-            menuLetter += 1
-
-        pass
-
-    def executePurchase(self, choiceOfAsset):
+    
+    ## presentLegalPurchases() prints a good list of options, then calls executePurchase()
+    def presentLegalPurchases(self, ListOfLegalAssets):
+        purchaseMenu = MenuHandler(ListOfLegalAssets)       # create a MenuHandler object with the legal assets
+        selectedOption = input(purchaseMenu.examineContents())  # get input
+        return purchaseMenu.lookup(selectedOption)          # handle input and send back selected asset  
+        
+    ## executePurchase() handles subtracting treasure and creating and adding AssetObjects
+    def executePurchase(self, OptionToPurchase):
+        AssetToPurchase = self.AssetsFile.lookup(str(OptionToPurchase))     # gather asset data structure
+        PurchasedAsset = FacAsset(self, AssetToPurchase["AssetID"])
+        self.OwnedAssets.append(PurchasedAsset)
         pass

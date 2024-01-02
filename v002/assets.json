@@ -1,66 +1,16 @@
 {
-    "ForceTypeAssets": [
-        {
-            "assetid": "intimidators",
-            "name": "Intimidators",
-            "level": 1,
-            "treasurecost": 2,
-            "hitpoints": 4,
-            "attackas": "None",
-            "attackvs": "None",
-            "attackdie": 0,
-            "attackoffset": 0,
-            "counterdie": 4,
-            "counteroffset": 0,
-            "special": "",
-            "upkeep": 0
-        },
-        {
-            "assetid": "localguards",
-            "name": "Local Guards",
-            "level": 1,
-            "treasurecost": 3,
-            "hitpoints": 4,
-            "attackas": "Force",
-            "attackvs": "Force",
-            "attackdie": 3,
-            "attackoffset": 1,
-            "counterdie": 4,
-            "counteroffset": 1,
-            "special": "",
-            "upkeep": 0
-        },
-        {
-            "assetid": "summonedhunters",
-            "name": "Summoned Hunters",
-            "level": 1,
-            "treasurecost": 4,
-            "hitpoints": 4,
-            "attackas": "Cunning",
-            "attackvs": "Force",
-            "attackdie": 6,
-            "attackoffset": 0,
-            "counterdie": 0,
-            "counteroffset": 0,
-            "special": "",
-            "upkeep": 0
-        },
-        {
-            "assetid": "thugs",
-            "name": "Thugs",
-            "level": 1,
-            "treasurecost": 2,
-            "hitpoints": 1,
-            "attackas": "Force",
-            "attackvs": "Cunning",
-            "attackdie": 6,
-            "attackoffset": 0,
-            "counterdie": 0,
-            "counteroffset": 0,
-            "special": "",
-            "upkeep": 0
-        },
-    ],
-    "CunningTypeAssets": [],
-    "WealthTypeAssets": []
+    "exampleAsset":{
+        "AssetID":"exampleAsset",
+        "AssetName":"Example Asset",
+        "AssetType":"Force",
+        "AssetLevel":"1",
+        "TreasureCost":"0",
+        "MaxHealth":"5",
+        "AttackAs":"Force",
+        "AttackVs":"Force",
+        "MinAttack":"1",
+        "MaxAttack":"4",
+        "MinCounter":"0",
+        "MaxCounter":"2"
+    }
 }
