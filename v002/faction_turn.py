@@ -8,6 +8,7 @@
 ### - create Assets
 ###     - handle Ownership
 ###     - handle Attack
+###         - handle SpecialAttackEffects
 ###     - handle Location
 ###     - handle ActivatedAbility
 
@@ -68,6 +69,10 @@ class Logger(FileInterpreter):
     def log(self, LogMessage, LogLevel=10):
         self.append(f"{LogLevel}: {LogMessage}\n")
 
+class MenuHandler():
+    def __init__(self):
+        pass
+
 # EXAMINTION: FacGoalObject
 # Initializaion will take two str()s; an OwnerFac for reference and a GoalID to FileInterpreter.lookup().
 # FacGoalObject.setID() will take a new ID, reset the current GoalProgress, and set the new GoalMaxProgress.
@@ -117,13 +122,14 @@ class FacAsset:
         self.AssetID = AssetID
         self.AssetData = FileInterpreter("assets.json")
         self.AssetData = self.AssetData.lookup(self.AssetID)
+        self.DisplayName = self.AssetData["AssetName"]
         # stat-data interations
         ## health
         self.AssetMaxHealth = self.AssetData["MaxHealth"]
         self.AssetCurrentHealth = self.AssetMaxHealth
         ## purchase requirements
         self.AssetStatType = self.AssetData["AssetType"]
-        self.AssetStatRequirement = self.AssetData["AssetLevel"]
+        self.AssetStatLevel = self.AssetData["AssetLevel"]
         self.AssetCost = self.AssetData["TreasureCost"]
         ## attack & counterattack
         self.AssetAttackAs = self.AssetData["AttackAs"]
@@ -155,6 +161,16 @@ class FacAsset:
         self.AssetCurrentHealth = n
         pass
 
+    ## Data tellers
+    def tellCost(self):
+        return self.AssetCost
+    
+    def tellType(self):
+        return self.AssetStatType
+    
+    def tellLevel(self):
+        return self.AssetStatLevel
+
     # Intra Asset Handling
 
 # EXAMINTION: FactionObject
@@ -173,10 +189,16 @@ class FactionObject:
         self.CurrentHealth = MaximumHealth      # The faction's current Health as an int()
         self.MaximumHealth = MaximumHealth      # The faction's maximum Health as an int()
         self.OwnedAssets = []
+
+        # File loading
+        self.AssetsFile = FileInterpreter("assets.json")
+        self.GoalsFile = FileInterpreter("goals.json")
+        self.TagsFile = FileInterpreter("tags.json")
+
         pass
 
     # Data Interactions...
-    ### Stats setters
+    ## Stats setters
     def setForceStat(self, n):
         self.ForceStat = n
         return
@@ -205,7 +227,7 @@ class FactionObject:
         self.MaximumHealth = n
         return
 
-    ### Complex Object setters
+    ## Complex Object setters
     def setGoal(self, GoalID):
         self.FacGoal = FacGoalObject(self.FacID, GoalID)
         return 
@@ -214,9 +236,64 @@ class FactionObject:
         self.FacTag = FacTagObject(self.FacID, TagID)
         return 
     
+    ## Data tellers
+    def tellCurrentTreasure(self):
+        return self.CurrentTreasure
+    
+    def tellCurrentHealth(self):
+        return self.CurrentHealth
+    
+    def tellMaximumHealth(self):
+        return self.MaximumHealth
+    
+    def tell
+
+    def lookupStat(self, StatToLookup):
+        if StatToLookup == "Force":
+            return self.ForceStat
+        if StatToLookup == "Cunning":
+            return self.CunningStat
+        if StatToLookup == "Wealth":
+            return self.WealthStat
+        else:
+            return 0
+
     # Asset Interactions...
-    ### CreateAsset will .append() an AssetObject into the FactionObject's OwnedObjects list().
-    def CreateAsset(self, AssetID):
-        self.AssetToCreate = FacAsset(self, AssetID)
-        self.OwnedAssets.append(self.AssetToCreate)
+    ## Create Asset
+    ### findLegalPurchases() returns a list of Assets the Faction could currently buy based on their stats.
+    def findLegalPurchases(self):
+        ListOfLegalAssets = []      # list to return
+        statsLegal = False          # bool
+        treasureLegal = False       # bool
+
+        for item in self.AssetsFile:            # for all assets in file:
+            ItemAssetType = item["AssetType"]               # check asset type
+            ItemAssetLevel = item["AssetLevel"]             # check asset cost
+            FacTypeStat = self.lookupStat(ItemAssetType)    # check faction stat
+            if FacTypeStat >= ItemAssetLevel:               # compare ^
+                statsLegal = True
+            ItemTreasureCost = item["TreasureCost"]         
+            if ItemTreasureCost <= self.tellCurrentTreasure():  # check faction treasure
+                treasureLegal = True                            # compare ^
+            if statsLegal and treasureLegal:                    # if both compare good:
+                ListOfLegalAssets.append(item)                  # add to list
+            else:
+                pass
+        return ListOfLegalAssets                # send back good assets
+
+    ######## BASE AS MENU SYSTEM
+    def presentLegalPurchases(self):
+        menuLetter = "a"                # symbol to display iterated "menu" choices
+        returnLetter = "z"              # symbol to move backwords in the "menu" system
+        encodedPurchaseArray = {}       # array to hold (symbol / assetid) pairs
+        for item in self.findLegalPurchases():
+            ItemAssetName = item["AssetName"]
+            ItemAssetCost = item["AssetCost"]
+            print(f"{menuLetter} - {ItemAssetName} - {ItemAssetCost} T.\n")     #### currently displays "base cost", instead display true cost after effects
+            encodedPurchaseArray.append(f"[{menuLetter}:{item}],")
+            menuLetter += 1
+
+        pass
+
+    def executePurchase(self, choiceOfAsset):
         pass
