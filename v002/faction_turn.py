@@ -330,9 +330,10 @@ class FactionObject:
         pass
 
     ## *Sell Assets*
+    ### executeSale() 
     def executeSale(self, AssetToSell):
-        realAssetPosition = self.findOwnedAssetPositionInList(AssetToSell)
-        self.OwnedAssets.pop(realAssetPosition)
+        realAssetPosition = self.findOwnedAssetPositionInList(AssetToSell)  # find the real Asset's position in OwnedAssets
+        self.OwnedAssets.pop(realAssetPosition)                             # remove real Asset from OwnedAssets
         pass
 
     ### MakeSellMenu() creates both the first sell menu (where a user chooses an Asset Type or the Finish option), and the second sell menu (where the Assets are selected and sold)
