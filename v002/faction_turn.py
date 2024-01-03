@@ -1,4 +1,4 @@
-### WARS CLI v001, 12-29-23
+### WARS CLI v001, 01-03-24
 ###
 ### Goals:
 ### - create Factions
@@ -76,9 +76,10 @@ class MenuHandler():
     def __init__(self, optionList):
         self.menuContents = {}
         self.iterableSymbol = "a"
+        self.interationCounter = self.iterableSymbol
         for item in optionList:
             self.menuContents.append(f"{self.iterableSymbol}:{item}")
-            self.iterableSymbol += 1
+            self.interationCounter += 1
         pass
 
     def examineContents(self):
@@ -200,9 +201,10 @@ class FactionObject:
         self.WealthStat = WealthStat    # The faction's Wealth stat as an int()
         self.CurrentExperience = CurrentExperience  # The faction's current Experience (to be spent to gain Stats) as an int()
         self.CurrentTreasure = CurrentTreasure      # The faction's current Treasure (to be spent to gain / manipulate Assets) as an int()
-        self.CurrentHealth = MaximumHealth      # The faction's current Health as an int()
-        self.MaximumHealth = MaximumHealth      # The faction's maximum Health as an int()
-        self.OwnedAssets = []
+        self.CurrentHealth = MaximumHealth          # The faction's current Health as an int()
+        self.MaximumHealth = MaximumHealth          # The faction's maximum Health as an int()
+        self.OwnedAssets = []                       # The faction's Owned Assets in a list()
+        self.TookTurnAction = False                 # The faction's action Flag as a bool()
 
         # File loading
         self.AssetsFile = FileInterpreter("assets.json")
@@ -271,12 +273,32 @@ class FactionObject:
             return 0
 
     # Asset Interactions...
-    ## Create Asset
+    ## Generic Interactions, used in other functions
+    ### lookupOwnedAssetsOfType() takes a type str(), and examines each asset owned by the Faction, returns list of assets of that type
+    def lookupOwnedAssetsOfType(self, TypeToLookup):
+        AssetsOfType = []
+        for item in self.OwnedAssets:
+            if item["AssetType"] == TypeToLookup:
+                AssetsOfType.append(item)
+        return AssetsOfType
+
+    ### findOwnedAssetPositionInList() takes a str() that is a copy taken from OwnedAssets list(), which is what we're searching so hopefully no funny business
+    def findOwnedAssetPositionInList(self, CopyOfAssetToFind):
+        positionInList = 0
+        for item in self.OwnedAssets:
+            if item == CopyOfAssetToFind:
+                self.OwnedAssets.pop(positionInList)
+                pass
+            positionInList += 1
+            pass
+
+
+    ## *Create Asset*
     ### findLegalPurchases() returns a list of Assets the Faction could currently buy based on their stats.
     def findLegalPurchases(self):
         ListOfLegalAssets = []      # list to return
-        statsLegal = False          # bool
-        treasureLegal = False       # bool
+        statsLegal = False          # flag as bool
+        treasureLegal = False       # flag as bool
 
         for item in self.AssetsFile:            # for all assets in file:
             ItemAssetType = item["AssetType"]               # check asset type
@@ -307,5 +329,37 @@ class FactionObject:
         self.OwnedAssets.append(PurchasedAsset)                         # append the new asset to the FacObject.OwnedAssets list
         pass
 
-    
+    ## *Sell Assets*
+    def executeSale(self, AssetToSell):
+        realAssetPosition = self.findOwnedAssetPositionInList(AssetToSell)
+        self.OwnedAssets.pop(realAssetPosition)
+        pass
 
+    ### MakeSellMenu() creates both the first sell menu (where a user chooses an Asset Type or the Finish option), and the second sell menu (where the Assets are selected and sold)
+    def MakeSellMenu(self):
+        FLAG_StillSelling = True                            # flag for while looping
+        firstHalfMenu = MenuHandler(["Force", "Cunning", "Wealth", "Done"]) # menu for type selection
+        while FLAG_StillSelling:                            # while loop to handle multiple asset sales
+            print(firstHalfMenu.examineContents())          # display to user
+            FHSelection = input()                           # input from user
+            if FHSelection == "d":                          # notice user wants to escape while loop & end sales
+                FLAG_StillSelling = False                   # set escape flag to true
+                self.TookTurnAction = True                  # set TookTurnAction flag to True as "Selling Assets" is a main action
+                pass                                        # try to leave the while loop
+            else:                                           #
+                FHSelection = firstHalfMenu.lookup(FHSelection) # manage user input as key to dict() to find desired Type
+                secondHalfContents = self.lookupOwnedAssetsOfType(FHSelection)  # find Assets of that Type
+                secondHalfNames = []                            # create empty name list
+                for item in secondHalfContents:                 # 
+                    secondHalfNames.append(item["AssetName"])   # append display names of Assets in Type
+                secondHalfMenu = MenuHandler(secondHalfNames)   # menu that list
+                print(secondHalfMenu.examineContents())         # present the menu to the user
+                SHSelection = input()                           # gather user input
+                if SHSelection == "z":                          # notice user wants to escape Asset selection and return to Type selection
+                    pass                                        # return to while
+                else:                                           #
+                    selectedAsset = secondHalfMenu.lookup(SHSelection)  # turn input character into Asset selected in menu
+                    self.executeSale(selectedAsset)                     # execute sale of asset - note we are passing a copy, but this will be handled appropriately
+                    pass                                                # return to while            
+        pass    ## finished selling, get out of here
+        
