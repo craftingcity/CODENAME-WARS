@@ -146,6 +146,9 @@ class FacAsset:
         self.AssetStatType = self.AssetData["AssetType"]
         self.AssetStatLevel = self.AssetData["AssetLevel"]
         self.AssetCost = self.AssetData["TreasureCost"]
+        ### imposed price offsets
+        self.ImposedAdditionalCosts = 0
+        self.ImposedReducedCosts = 0
         ## attack & counterattack
         self.AssetAttackAs = self.AssetData["AttackAs"]
         self.AssetAttackVs = self.AssetData["AttackVs"]
@@ -166,6 +169,10 @@ class FacAsset:
         self.AssetID = newAsset
         pass
 
+    def setName(self, newName):
+        self.DisplayName = newName
+        pass
+
     ## Stat-data setters
 
     def setMaxHP(self, n):
@@ -177,6 +184,9 @@ class FacAsset:
         pass
 
     ## Data tellers
+    def tellName(self):
+        return self.DisplayName
+
     def tellCost(self):
         return self.AssetCost
     
@@ -185,6 +195,18 @@ class FacAsset:
     
     def tellLevel(self):
         return self.AssetStatLevel
+    
+    def tellCurrentHealth(self):
+        return self.AssetCurrentHealth
+    
+    def tellMaximumHealth(self):
+        return self.AssetMaxHealth
+    
+    def tellIsHurt(self):
+        if self.AssetCurrentHealth != self.AssetMaxHealth:
+            return True
+        else:
+            return False
 
     # Intra Asset Handling
 
@@ -243,6 +265,11 @@ class FactionObject:
         self.MaximumHealth = n
         return
 
+    ## Flag setters
+    def setTookActionFlag(self, bool):
+        self.TookTurnAction = bool
+        return
+
     ## Complex Object setters
     def setGoal(self, GoalID):
         self.FacGoal = FacGoalObject(self.FacID, GoalID)
@@ -278,15 +305,15 @@ class FactionObject:
     def lookupOwnedAssetsOfType(self, TypeToLookup):
         AssetsOfType = []
         for item in self.OwnedAssets:
-            if item["AssetType"] == TypeToLookup:
+            if item.tellType() == TypeToLookup:
                 AssetsOfType.append(item)
         return AssetsOfType
 
-    ### findOwnedAssetPositionInList() takes a str() that is a copy taken from OwnedAssets list(), which is what we're searching so hopefully no funny business
-    def findOwnedAssetPositionInList(self, CopyOfAssetToFind):
+    ### findOwnedAssetPositionInList() takes a str() that is a 
+    def findOwnedAssetPositionInList(self, NameOfAssetToFind):
         positionInList = 0
         for item in self.OwnedAssets:
-            if item == CopyOfAssetToFind:
+            if item.tellName() == NameOfAssetToFind:
                 self.OwnedAssets.pop(positionInList)
                 pass
             positionInList += 1
@@ -330,10 +357,15 @@ class FactionObject:
         pass
 
     ## *Sell Assets*
-    ### executeSale() 
+    ### executeSale() handles the sale of a real OwnedAsset based on a copy of that asset
     def executeSale(self, AssetToSell):
-        realAssetPosition = self.findOwnedAssetPositionInList(AssetToSell)  # find the real Asset's position in OwnedAssets
-        self.OwnedAssets.pop(realAssetPosition)                             # remove real Asset from OwnedAssets
+        realAssetPosition = self.findOwnedAssetPositionInList(AssetToSell)              # find the real Asset's position in OwnedAssets
+        workingAsset = FacAsset("admin", self.OwnedAssets[realAssetPosition])           # create a working FacAsset for easy info gathering
+        self.OwnedAssets.pop(realAssetPosition)                                         # remove real Asset from OwnedAssets
+        TreasureToGive = workingAsset.tellCost()                                        # gather asset cost
+        if workingAsset.tellIsHurt():                                                   # find if IsHurt
+            TreasureToGive = TreasureToGive % 2                                         # half TreasureToGive if IsHurt
+        self.CurrentTreasure += TreasureToGive                                          # give treasure to faction
         pass
 
     ### MakeSellMenu() creates both the first sell menu (where a user chooses an Asset Type or the Finish option), and the second sell menu (where the Assets are selected and sold)
@@ -352,7 +384,7 @@ class FactionObject:
                 secondHalfContents = self.lookupOwnedAssetsOfType(FHSelection)  # find Assets of that Type
                 secondHalfNames = []                            # create empty name list
                 for item in secondHalfContents:                 # 
-                    secondHalfNames.append(item["AssetName"])   # append display names of Assets in Type
+                    secondHalfNames.append(item.tellName())     # append display names of Assets in Type
                 secondHalfMenu = MenuHandler(secondHalfNames)   # menu that list
                 print(secondHalfMenu.examineContents())         # present the menu to the user
                 SHSelection = input()                           # gather user input
@@ -363,4 +395,11 @@ class FactionObject:
                     self.executeSale(selectedAsset)                     # execute sale of asset - note we are passing a copy, but this will be handled appropriately
                     pass                                                # return to while            
         pass    ## finished selling, get out of here
-        
+
+### MAIN MAIN MAIN MAIN ###
+    
+def executeMain():
+    pass
+    
+if __name__ == '__main__':
+    executeMain()
